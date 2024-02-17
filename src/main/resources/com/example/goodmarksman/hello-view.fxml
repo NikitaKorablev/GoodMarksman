@@ -17,7 +17,7 @@
                      <Line endX="100.0" endY="109.0" layoutX="250.0" layoutY="130.0" startX="100.0" startY="-131.0" />
                      <Circle fx:id="smallTarget" fill="#ff2121" layoutX="350.0" layoutY="119.0" radius="9.0" stroke="BLACK" strokeType="INSIDE" />
                      <Circle fx:id="bigTarget" fill="#21d4ff" layoutX="292.0" layoutY="120.0" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
-                     <Polygon fx:id="arrow" layoutX="60.0" layoutY="120.0" points="-50.0, 5.0, -22.0, 0.0, -50.0, -5.0" stroke="BLACK" strokeType="INSIDE" />
+                     <Polygon fx:id="arrow" layoutX="38.0" layoutY="122.0" points="-30.0, 5.0, 0.0, 0.0, -30.0, -5.0" stroke="BLACK" strokeType="INSIDE" />
                      <Rectangle fill="#e7ff1f" height="240.0" smooth="false" stroke="BLACK" strokeType="INSIDE" width="46.0" />
                      <Polygon fill="DODGERBLUE" layoutX="75.0" layoutY="128.0" points="-62.599998474121094, 18.600006103515625, -41.599998474121094, -7.399993896484375, -62.599998474121094, -36.400001525878906" stroke="BLACK" strokeType="INSIDE" />
                      <Line endX="58.50708770751953" endY="1.0070877075195312" layoutX="27.0" layoutY="120.0" startX="25.799999237060547" startY="1.0070877075195312" />
@@ -29,7 +29,7 @@
                   <children>
                      <Button fx:id="startButton" mnemonicParsing="false" onAction="#onStartButtonClick" text="Start" />
                    <Button fx:id="stopButton" mnemonicParsing="false" onAction="#onStopButtonClick" text="Stop" />
-                     <Button fx:id="shootButton" minWidth="58.0" mnemonicParsing="false" onAction="#onShootButtonClick" prefHeight="26.0" text="Shoot" />
+                     <Button fx:id="shotButton" minWidth="58.0" mnemonicParsing="false" onAction="#onShotButtonClick" prefHeight="26.0" text="Shot" />
                   </children>
                   <padding>
                      <Insets left="10.0" />
@@ -37,9 +37,9 @@
                </HBox>
             </children>
          </FlowPane>
-         <VBox fx:id="score" prefHeight="286.0" prefWidth="127.0" style="-fx-border-color: black;">
+         <VBox fx:id="" prefHeight="286.0" prefWidth="127.0" style="-fx-border-color: black;">
             <children>
-               <Label fx:id="scoreLabel" text="Счет игрока:">
+               <Label text="Счет игрока:">
                   <font>
                      <Font name="System Bold" size="16.0" />
                   </font>
@@ -47,12 +47,12 @@
                      <Insets left="5.0" right="5.0" top="10.0" />
                   </VBox.margin>
                </Label>
-               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="0">
+               <Text fx:id="score" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
                   <VBox.margin>
                      <Insets left="5.0" />
                   </VBox.margin>
                </Text>
-               <Label fx:id="shotsLabel" text="Выстрелов:">
+               <Label text="Выстрелов:">
                   <font>
                      <Font name="System Bold" size="16.0" />
                   </font>
@@ -60,7 +60,7 @@
                      <Insets left="5.0" right="5.0" />
                   </VBox.margin>
                </Label>
-               <Text strokeType="OUTSIDE" strokeWidth="0.0" text="0">
+               <Text fx:id="shots" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
                   <VBox.margin>
                      <Insets left="5.0" />
                   </VBox.margin>
