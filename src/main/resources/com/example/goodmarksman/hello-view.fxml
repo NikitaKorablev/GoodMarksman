@@ -28,8 +28,16 @@
                <HBox alignment="CENTER_LEFT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="44.0" prefWidth="390.0" spacing="10.0" style="-fx-background-color: #CDCDCD;">
                   <children>
                      <Button fx:id="startButton" mnemonicParsing="false" onAction="#onStartButtonClick" text="Start" />
-                   <Button fx:id="stopButton" mnemonicParsing="false" onAction="#onStopButtonClick" text="Stop" />
+                     <Button mnemonicParsing="false" onAction="#onPauseButtonClick" text="Pause">
+                        <HBox.margin>
+                           <Insets />
+                        </HBox.margin>
+                     </Button>
                      <Button fx:id="shotButton" minWidth="58.0" mnemonicParsing="false" onAction="#onShotButtonClick" prefHeight="26.0" text="Shot" />
+                   <Button fx:id="stopButton" mnemonicParsing="false" onAction="#onStopButtonClick" text="Stop">
+                        <HBox.margin>
+                           <Insets left="150.0" />
+                        </HBox.margin></Button>
                   </children>
                   <padding>
                      <Insets left="10.0" />

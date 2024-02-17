@@ -35,11 +35,17 @@ public class Game {
     private final int targetSpeed = 1;
 
     private void moveArrowToStart() { arrow.setLayoutX(38); }
+    private void moveTargetsToStart() {
+        bigTarget.setLayoutY(gameWindow.getHeight() / 2);
+        smallTarget.setLayoutY(gameWindow.getHeight() / 2);
+    }
     private void colorizeBigTarget(Color color) { bigTarget.setFill(color); }
     private void colorizeSmallTarget(Color color) { smallTarget.setFill(color); }
 
-    private void addScore(int add) { score.setText(Integer.toString(Integer.parseInt(score.getText())+add)); }
-    private void addShots() { shots.setText(Integer.toString(Integer.parseInt(shots.getText())+1)); }
+    private int getScore() { return Integer.parseInt(score.getText()); }
+    private void setScore(int s) { score.setText(Integer.toString(s)); }
+    private int getShots() { return Integer.parseInt(shots.getText()); }
+    private void setShots(int s) { shots.setText(Integer.toString(s)); }
     private void startView() {
         double[] sep = {bigTarget.getLayoutX() - bigTarget.getRadius(),
                         bigTarget.getLayoutX(),
@@ -71,7 +77,7 @@ public class Game {
                             if (distance <= bigTarget.getRadius()) {
                                 colorizeBigTarget(Color.rgb(0, 128, 0));
                                 isShooting = false;
-                                addScore(1);
+                                setScore(getScore() + 1);
                                 moveArrowToStart();
                             }
                         } else if (arrow.getLayoutX() >= sep[2] & arrow.getLayoutX() <= sep[3]) {
@@ -79,7 +85,7 @@ public class Game {
                                     Math.pow(arrow.getLayoutY() - smallTarget.getLayoutY(), 2));
                             if (distance <= smallTarget.getRadius()) {
                                 isShooting = false;
-                                addScore(2);
+                                setScore(getScore() + 2);
                                 colorizeSmallTarget(Color.rgb(0, 128, 0));
                                 moveArrowToStart();
                             }
@@ -117,10 +123,17 @@ public class Game {
     @FXML
     protected void onStopButtonClick() {
         isPaused = true;
+        isShooting = false;
+        moveArrowToStart();
+        moveTargetsToStart();
+        setScore(0);
+        setShots(0);
     }
     @FXML
     protected void onShotButtonClick() {
-        addShots();
-        isShooting = true;
+        setShots(getShots() + 1);
+        if (!isPaused) isShooting = true;
     }
+    @FXML
+    protected void onPauseButtonClick() { isPaused = true; }
 }
