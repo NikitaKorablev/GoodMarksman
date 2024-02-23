@@ -10,7 +10,7 @@ import javafx.scene.text.Text;
 
 import java.lang.Math;
 
-public class Game {
+public class OldController {
     @FXML
     private Pane gameWindow;
     @FXML

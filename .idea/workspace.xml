@@ -5,8 +5,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="42cc0b46-0503-4e46-abd9-394f3343f57e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/goodmarksman/Controller.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/goodmarksman/View.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/goodmarksman/objects/Arrow.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/goodmarksman/objects/Game.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/goodmarksman/objects/ScoreTable.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/goodmarksman/Game.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/goodmarksman/Game.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/goodmarksman/Game.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/goodmarksman/OldPackage/OldController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/goodmarksman/OldPackage/OldController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/goodmarksman/hello-view.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/goodmarksman/hello-view.fxml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -52,6 +60,7 @@
     &quot;Application.HelloApplication.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;git-widget-placeholder&quot;: &quot;main&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
@@ -67,6 +76,9 @@
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\FucingTrash\Programming\Repozitories\GoodMarksman\assets" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.example.goodmarksman" />
     </key>
   </component>
   <component name="SharedIndexes">
@@ -99,6 +111,9 @@
       <workItem from="1708119492615" duration="269000" />
       <workItem from="1708164041919" duration="2261000" />
       <workItem from="1708198177497" duration="1048000" />
+      <workItem from="1708618380711" duration="21744000" />
+      <workItem from="1708704676722" duration="70000" />
+      <workItem from="1708709562153" duration="6970000" />
     </task>
     <servers />
   </component>
