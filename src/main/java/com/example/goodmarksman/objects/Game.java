@@ -101,6 +101,7 @@ public class Game {
 
     public void shot(View view) {
         if (this.state != GameState.STARTED) return;
+        if (arrow.getIsShooting()) return;
 
         arrow.setIsShooting(true);
         view.shotInc();
