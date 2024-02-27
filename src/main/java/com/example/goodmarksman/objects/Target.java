@@ -7,13 +7,14 @@ import javafx.scene.shape.Circle;
 
 public class Target {
     private final Circle target;
-    private int moveSpeed = 1;
+    private int moveSpeed;
     private final int startOrientation;
     private int orientation;
     private final int weight;
 
-    public Target(Circle circle, int orientation, int weight) {
+    public Target(Circle circle, int orientation, int weight, int speed) {
         this.target = circle;
+        this.moveSpeed = speed;
         this.startOrientation = orientation;
         this.orientation = orientation;
         this.weight = weight;

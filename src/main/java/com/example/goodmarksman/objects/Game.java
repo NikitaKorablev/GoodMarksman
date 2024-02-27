@@ -13,8 +13,8 @@ public class Game {
     public GameState state = GameState.NOT_INITIALIZED;
 
     public void init(Circle target1, Circle target2, Polygon arrow) {
-        this.target1 = new Target(target1, -1, 1);
-        this.target2 = new Target(target2, 1, 2);
+        this.target1 = new Target(target1, -1, 1, 1);
+        this.target2 = new Target(target2, 1, 2, 2);
         this.arrow = new Arrow(arrow);
 
         this.state = GameState.STOPPED;
