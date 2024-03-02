@@ -1,6 +1,7 @@
 package com.example.goodmarksman;
 
 import com.example.goodmarksman.objects.Arrow;
+import com.example.goodmarksman.objects.COLORS;
 import com.example.goodmarksman.objects.ScoreTable;
 import com.example.goodmarksman.objects.Target;
 import javafx.scene.layout.Pane;
@@ -9,12 +10,14 @@ import javafx.scene.text.Text;
 
 public class View {
     private final ScoreTable scoreBoard;
-
     private final double lowerThreshold;
     private final double upperThreshold;
     private final double targetStartPos;
     private final double arrowStartPosition = 38;
     private final double max_x = 380;
+
+    private int target1_ColorCoolDown = 0;
+    private int target2_ColorCoolDown = 0;
 
     View(Pane parentPane, Text score, Text shotCount) {
         this.scoreBoard = new ScoreTable(score, shotCount);
@@ -31,7 +34,7 @@ public class View {
     }
 
     public double getMaxX() { return max_x; }
-    public void paint(Target target, COLOR color) {
+    public void paint(Target target, COLORS color) {
         switch (color) {
             case RED -> target.setColor(Color.rgb(255, 33, 33));
             case BLUE -> target.setColor(Color.rgb(33, 212, 255));
@@ -46,6 +49,12 @@ public class View {
             newY = target.getY() + target.getMoveSpeed() * target.getOrientation();
         }
         target.setY(newY);
+
+        try {
+            if (target.updateCoolDown()) { paint(target, target.getColor()); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     public void move(Arrow arrow) {
         double newX = arrow.getX() + arrow.getSpeed();
@@ -55,6 +64,7 @@ public class View {
         arrow.setIsShooting(false);
         arrow.setX(this.arrowStartPosition);
         this.scoreInc(target.getWeight());
+        target.setCoolDown();
     }
 
     public void setStartPositions(Target target1, Target target2, Arrow arrow) {
@@ -69,8 +79,4 @@ public class View {
     }
 
     public double getArrowStartPosition() { return this.arrowStartPosition; }
-
-    public enum COLOR {
-        BLUE, RED, GREEN
-    }
 }

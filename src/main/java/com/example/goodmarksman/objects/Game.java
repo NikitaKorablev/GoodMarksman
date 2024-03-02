@@ -10,30 +10,26 @@ public class Game {
     private Arrow arrow;
     private Thread gameThread;
     private final int timeSleep = 500;
-    public GameState state = GameState.NOT_INITIALIZED;
+    public GameState state = GameState.STOPPED;
+
+    public boolean isPaused = false;
 
     public void init(Circle target1, Circle target2, Polygon arrow) {
-        this.target1 = new Target(target1, -1, 1, 1);
-        this.target2 = new Target(target2, 1, 2, 2);
+        this.target1 = new Target(target1, COLORS.BLUE, -1, 1, 1);
+        this.target2 = new Target(target2, COLORS.RED, 1, 2, 2);
         this.arrow = new Arrow(arrow);
-
-        this.state = GameState.STOPPED;
     }
 
     private void eventCheck(View view) {
         if (arrow.getX() >= target1.getX() - target1.getRadius() && arrow.getX() <= target1.getX()) {
             if (target1.isHitted(arrow.getX(), arrow.getY())) {
-                view.paint(target1, View.COLOR.GREEN);
+                view.paint(target1, COLORS.GREEN);
                 view.hit(target1, arrow);
-                this.gameFreeze(this.timeSleep);
-                view.paint(target1, View.COLOR.BLUE);
             }
         } else if (arrow.getX() >= target2.getX() - target2.getRadius() && arrow.getX() <= target2.getX()) {
             if (target2.isHitted(arrow.getX(), arrow.getY())) {
-                view.paint(target2, View.COLOR.GREEN);
+                view.paint(target2, COLORS.GREEN);
                 view.hit(target2, arrow);
-                this.gameFreeze(this.timeSleep);
-                view.paint(target2, View.COLOR.RED);
             }
         } else if (arrow.getX() >= view.getMaxX()) {
             arrow.setIsShooting(false);
@@ -45,27 +41,51 @@ public class Game {
         try {
             this.setPaused();
             Thread.sleep(time);
-            this.gameResume();
+            this.checkState();
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
-    private boolean gameResume() {
-        if (state == GameState.NOT_INITIALIZED) return false;
-
+    private boolean checkState() {
         if (gameThread != null) {
-            if (this.state == GameState.PAUSED) { this.state = GameState.STARTED; }
-            else return false;
+            if (this.isPaused) {
+                try {
+                    synchronized (gameThread) {
+                        this.isPaused = false;
+                        gameThread.notify();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     public void startGame(View view) {
-        if (!gameResume()) return;
+        if (checkState()) return;
 
         gameThread = new Thread(() -> {
             while(this.state == GameState.STARTED) {
+                if (isPaused) {
+                    try {
+                        synchronized (gameThread) {
+                            try {
+                                gameThread.wait();
+                            } catch (InterruptedException e) {
+                                System.err.println(e);
+                                this.stopGame(view);
+                            }
+                        }
+                    } catch (Exception e) {
+                        System.err.println(e);
+                        this.stopGame(view);
+                    }
+                }
+
+
                 view.move(target1);
                 view.move(target2);
 
@@ -88,9 +108,9 @@ public class Game {
     }
 
     public void setPaused() throws InterruptedException {
-        if (state == GameState.STOPPED || state == GameState.NOT_INITIALIZED) return;
+        if (state == GameState.STOPPED) return;
 
-        this.state = GameState.PAUSED;
+        this.isPaused = true;
     }
     public void stopGame(View view) {
         this.state = GameState.STOPPED;
@@ -100,14 +120,15 @@ public class Game {
     }
 
     public void shot(View view) {
-        if (this.state != GameState.STARTED) return;
-        if (arrow.getIsShooting()) return;
+        if (!this.isPaused) {
+            if (arrow.getIsShooting()) return;
 
-        arrow.setIsShooting(true);
-        view.shotInc();
+            arrow.setIsShooting(true);
+            view.shotInc();
+        }
     }
 
     public enum GameState {
-        STARTED, STOPPED, PAUSED, NOT_INITIALIZED
+        STARTED, STOPPED
     }
 }

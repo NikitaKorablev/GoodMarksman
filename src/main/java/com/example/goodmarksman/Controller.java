@@ -30,8 +30,6 @@ public class Controller {
             gameView = new View(gameWindow, score, shots);
             Model model = new Model();
             game = model.getGame();
-        }
-        if (game.state == Game.GameState.NOT_INITIALIZED) {
             game.init(bigTarget, smallTarget, arrow);
         }
 
@@ -40,9 +38,7 @@ public class Controller {
     @FXML
     protected void onStopButtonClick() {
         if (gameView == null) return;
-
-        if (game.state == Game.GameState.STOPPED ||
-        game.state == Game.GameState.NOT_INITIALIZED) return;
+        if (game.state == Game.GameState.STOPPED) return;
 
         game.stopGame(gameView);
     }

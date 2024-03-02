@@ -7,17 +7,31 @@ import javafx.scene.shape.Circle;
 
 public class Target {
     private final Circle target;
+    private final COLORS color;
     private int moveSpeed;
     private final int startOrientation;
     private int orientation;
     private final int weight;
+    private final int colorCoolDown = 20;
+    public int currentCoolDown = 0;
 
-    public Target(Circle circle, int orientation, int weight, int speed) {
+    public Target(Circle circle, COLORS color, int orientation, int weight, int speed) {
         this.target = circle;
+        this.color = color;
         this.moveSpeed = speed;
         this.startOrientation = orientation;
         this.orientation = orientation;
         this.weight = weight;
+    }
+
+    public COLORS getColor() { return color; }
+    public void setCoolDown() { this.currentCoolDown = this.colorCoolDown; }
+    public boolean updateCoolDown() throws Exception {
+        if (this.currentCoolDown < 0) throw new Exception("CurrentCoolDown < 0");
+
+        boolean res = (this.currentCoolDown - 1 == 0);
+        if (this.currentCoolDown > 0) this.currentCoolDown--;
+        return res;
     }
 
     public double getRadius() { return this.target.getRadius(); }
