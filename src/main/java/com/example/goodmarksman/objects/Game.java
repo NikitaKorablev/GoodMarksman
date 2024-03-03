@@ -5,6 +5,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 
 public class Game {
+    private final View view;
     private Target target1;
     private Target target2;
     private Arrow arrow;
@@ -14,7 +15,8 @@ public class Game {
 
     public boolean isPaused = false;
 
-    public void init(Circle target1, Circle target2, Polygon arrow) {
+    public Game(Circle target1, Circle target2, Polygon arrow, View view) {
+        this.view = view;
         this.target1 = new Target(target1, COLORS.BLUE, -1, 1, 1);
         this.target2 = new Target(target2, COLORS.RED, 1, 2, 2);
         this.arrow = new Arrow(arrow);
@@ -64,7 +66,9 @@ public class Game {
         return false;
     }
 
-    public void startGame(View view) {
+    public void setArrowY(double y) { this.view.setArrowY(arrow, y); }
+
+    public void startGame() {
         if (checkState()) return;
 
         gameThread = new Thread(() -> {
@@ -76,22 +80,22 @@ public class Game {
                                 gameThread.wait();
                             } catch (InterruptedException e) {
                                 System.err.println(e);
-                                this.stopGame(view);
+                                this.stopGame();
                             }
                         }
                     } catch (Exception e) {
                         System.err.println(e);
-                        this.stopGame(view);
+                        this.stopGame();
                     }
                 }
 
 
-                view.move(target1);
-                view.move(target2);
+                this.view.move(target1);
+                this.view.move(target2);
 
                 if (arrow.getIsShooting()) {
-                    view.move(arrow);
-                    this.eventCheck(view);
+                    this.view.move(arrow);
+                    this.eventCheck(this.view);
                 }
 
                 try {
@@ -112,19 +116,19 @@ public class Game {
 
         this.isPaused = true;
     }
-    public void stopGame(View view) {
+    public void stopGame() {
         this.state = GameState.STOPPED;
         gameThread = null;
 
-        view.setStartPositions(target1, target2, arrow);
+        this.view.setStartPositions(target1, target2, arrow);
     }
 
-    public void shot(View view) {
+    public void shot() {
         if (!this.isPaused) {
             if (arrow.getIsShooting()) return;
 
             arrow.setIsShooting(true);
-            view.shotInc();
+            this.view.shotInc();
         }
     }
 
