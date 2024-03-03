@@ -12,18 +12,15 @@
       <children>
          <FlowPane prefHeight="0.0" prefWidth="390.0" style="-fx-border-color: black;">
             <children>
-               <Pane fx:id="gameWindow" prefHeight="240.0" prefWidth="390.0">
+               <Pane fx:id="gameWindow" onMouseClicked="#mouseOnClicked" prefHeight="240.0" prefWidth="390.0">
                   <children>
                      <Line endX="7.399993896484375" endY="121.00001525878906" layoutX="285.0" layoutY="119.0" startX="7.399993896484375" startY="-119.00000762939453" />
                      <Line endX="100.0" endY="109.0" layoutX="250.0" layoutY="130.0" startX="100.0" startY="-131.0" />
                      <Circle fx:id="smallTarget" fill="#ff2121" layoutX="350.0" layoutY="119.0" radius="9.0" stroke="BLACK" strokeType="INSIDE" />
                      <Circle fx:id="bigTarget" fill="#21d4ff" layoutX="292.0" layoutY="120.0" radius="17.0" stroke="BLACK" strokeType="INSIDE" />
-                     <Polygon fx:id="arrow" layoutX="38.0" layoutY="122.0" points="-30.0, 5.0, 0.0, 0.0, -30.0, -5.0" stroke="BLACK" strokeType="INSIDE" />
+                     <Polygon fx:id="arrow2" layoutX="38.0" layoutY="122.0" points="-30.0, 5.0, 0.0, 0.0, -30.0, -5.0" stroke="BLACK" strokeType="INSIDE" />
                      <Rectangle fill="#e7ff1f" height="240.0" smooth="false" stroke="BLACK" strokeType="INSIDE" width="46.0" />
-                     <Polygon fill="DODGERBLUE" layoutX="75.0" layoutY="128.0" points="-62.599998474121094, 18.600006103515625, -41.599998474121094, -7.399993896484375, -62.599998474121094, -36.400001525878906" stroke="BLACK" strokeType="INSIDE" />
-                     <Line endX="58.50708770751953" endY="1.0070877075195312" layoutX="27.0" layoutY="120.0" startX="25.799999237060547" startY="1.0070877075195312" />
-                     <Line endX="-80.20000457763672" endY="12.299995422363281" layoutX="165.0" layoutY="108.0" startX="-91.20000457763672" startY="5.299995422363281" />
-                     <Line endX="-75.49291229248047" endY="-37.99291229248047" layoutX="161.0" layoutY="159.0" startX="-88.20000457763672" startY="-30.699996948242188" />
+                     <Polygon fx:id="arrow" fill="DODGERBLUE" layoutX="38.0" layoutY="122.0" points="-30.0, 5.0, 0.0, 0.0, -30.0, -5.0" stroke="BLACK" strokeType="INSIDE" />
                   </children>
                </Pane>
                <HBox alignment="CENTER_LEFT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="44.0" prefWidth="390.0" spacing="10.0" style="-fx-background-color: #CDCDCD;">

@@ -4,6 +4,7 @@ import com.example.goodmarksman.objects.Arrow;
 import com.example.goodmarksman.objects.COLORS;
 import com.example.goodmarksman.objects.ScoreTable;
 import com.example.goodmarksman.objects.Target;
+import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -16,14 +17,15 @@ public class View {
     private final double arrowStartPosition = 38;
     private final double max_x = 380;
 
-    private int target1_ColorCoolDown = 0;
-    private int target2_ColorCoolDown = 0;
-
     View(Pane parentPane, Text score, Text shotCount) {
         this.scoreBoard = new ScoreTable(score, shotCount);
         this.lowerThreshold = 0;
         this.upperThreshold = parentPane.getHeight();
         this.targetStartPos = this.upperThreshold / 2;
+    }
+
+    public void setArrowY(Arrow arrow, double y) {
+        Platform.runLater(() -> arrow.setY(y));
     }
 
     public void scoreInc(int weight) { this.scoreBoard.scoreInc(weight); }

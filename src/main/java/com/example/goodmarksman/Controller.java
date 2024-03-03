@@ -2,6 +2,7 @@ package com.example.goodmarksman;
 
 import com.example.goodmarksman.objects.Game;
 import javafx.fxml.FXML;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
@@ -25,6 +26,11 @@ public class Controller {
     private Game game;
 
     @FXML
+    protected void mouseOnClicked(MouseEvent event) {
+        this.arrow.setLayoutY(event.getY());
+    }
+
+    @FXML
     protected void onStartButtonClick() {
         if (game == null) {
             gameView = new View(gameWindow, score, shots);
@@ -44,7 +50,7 @@ public class Controller {
     }
     @FXML
     protected void onShotButtonClick() {
-        if (gameView == null) return;
+        if (gameView == null || game.state == Game.GameState.STOPPED) return;
         game.shot(gameView);
     }
     @FXML

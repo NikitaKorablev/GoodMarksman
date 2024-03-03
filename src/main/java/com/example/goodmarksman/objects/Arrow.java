@@ -13,6 +13,7 @@ public class Arrow {
     }
 
     public double getY() { return arrow.getLayoutY(); }
+    public void setY(double y) { this.arrow.setLayoutY(y); }
     public double getX() { return arrow.getLayoutX(); }
     public void setX(double x) {
         Platform.runLater(() -> arrow.setLayoutX(x));
