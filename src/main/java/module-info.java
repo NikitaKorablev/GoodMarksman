@@ -7,4 +7,6 @@ module com.example.goodmarksman {
 
     opens com.example.goodmarksman to javafx.fxml;
     exports com.example.goodmarksman;
+    exports com.example.goodmarksman.objects;
+    opens com.example.goodmarksman.objects to javafx.fxml;
 }
