@@ -4,8 +4,9 @@ module com.example.goodmarksman {
 
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
+    requires com.google.gson;
 
-    opens com.example.goodmarksman to javafx.fxml;
+    opens com.example.goodmarksman to javafx.fxml, com.google.gson;
     exports com.example.goodmarksman;
     exports com.example.goodmarksman.objects;
     opens com.example.goodmarksman.objects to javafx.fxml;
