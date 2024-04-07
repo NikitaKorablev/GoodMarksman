@@ -3,6 +3,7 @@ package com.example.goodmarksman.objects;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
 public class Target {
@@ -17,6 +18,24 @@ public class Target {
 
     public Target(Circle circle, COLORS color, int orientation, int weight, int speed) {
         this.target = circle;
+        this.color = color;
+        this.moveSpeed = speed;
+        this.startOrientation = orientation;
+        this.orientation = orientation;
+        this.weight = weight;
+    }
+
+    public Target(COLORS color, int radius, int x, int y , int orientation, int weight, int speed) {
+        this.target = new Circle(radius);
+        this.target.setLayoutX(x);
+        this.target.setLayoutY(y);
+
+        switch (color) {
+            case RED -> target.setFill(Color.rgb(255, 33, 33));
+            case BLUE -> target.setFill(Color.rgb(33, 212, 255));
+            case GREEN -> target.setFill(Color.rgb(0, 128, 0));
+        }
+
         this.color = color;
         this.moveSpeed = speed;
         this.startOrientation = orientation;

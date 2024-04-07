@@ -8,8 +8,11 @@ public class Arrow {
     private int moveSpeed = 10;
     private boolean isShooting = false;
 
-    Arrow(Polygon arrow) {
+    public Arrow(Polygon arrow) {
         this.arrow = arrow;
+    }
+    public Arrow() {
+        this.arrow = new Polygon();
     }
 
     public double getY() { return arrow.getLayoutY(); }
