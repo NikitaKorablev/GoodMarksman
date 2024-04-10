@@ -1,5 +1,6 @@
 package com.example.goodmarksman;
 
+import com.example.goodmarksman.objects.Client;
 import com.google.gson.Gson;
 
 import java.io.*;
@@ -12,43 +13,77 @@ public class GameClient implements IObserver {
 
     MsgAction gameState = MsgAction.GAME_STOPPED;
 
-    Socket cs;
-    InputStream is;
-    OutputStream os;
-    DataInputStream dis;
-    DataOutputStream dos;
+    private Client server;
+    private Thread msgListener = null;
+    public boolean nameChecked = false;
+//    Socket cs;
+//    InputStream is;
+//    OutputStream os;
+//    DataInputStream dis;
+//    DataOutputStream dos;
 
     // Подключение к серверу
-    public GameClient(Socket cs) {
-        this.cs = cs;
-        try {
-            os = cs.getOutputStream();
-            dos = new DataOutputStream(os);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
+    public GameClient(Socket cs) throws Exception {
+        server = new Client(cs);
+
+        System.out.println("Client connected");
+        Msg msg = readMsg();
+        System.out.println(msg);
+        if (msg.getAction() == MsgAction.CONNECTION_ERROR) {
+            System.err.println(msg.message);
+            server.setConnected(false);
+            nameChecked = true;
+            server.getSocket().close();
+            throw new Exception(msg.message);
         }
 
-        new Thread(this::run).start();
+        msgListener = new Thread(this::messageListener);
+        msgListener.start();
+//        new Thread(this::run).start();
     }
+
+    void messageListener() {
+        boolean listening = true;
+
+        while (listening) {
+            try {
+                Msg msg = readMsg();
+                System.out.println(msg);
+                if (msg.getAction() == MsgAction.CONNECTED) {
+                    System.out.println(msg.message);
+                    server.setConnected(true);
+                    nameChecked = true;
+                }
+                if (msg.getAction() == MsgAction.CONNECTION_ERROR) {
+                    System.err.println(msg.message);
+                    server.setConnected(false);
+                    nameChecked = true;
+                    listening = false;
+                    server.getSocket().close();
+                }
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+                return;
+            }
+        }
+    }
+
     //TODO: Запуск цикла клиентской части
     void run() {
-        try {
-            is = cs.getInputStream();
-            dis = new DataInputStream(is);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-
-        while (true) {
-            Resp r = readResp();
+//        while (true) {
+//            Resp r = readResp();
 //            m.set(r.getPoints());
-        }
+//        }
     }
 
-    public Resp readResp() {
+    public boolean isConnected() {
+        return server.isConnected();
+    }
+
+    public Resp readResp(Client cl) throws IOException {
         Resp r = null;
         try {
-            String respStr = dis.readUTF();
+            String respStr = cl.getDis().readUTF();
             r = gson.fromJson(respStr, Resp.class);
         } catch(Exception e) {
             System.out.println(e.getMessage());
@@ -56,32 +91,33 @@ public class GameClient implements IObserver {
         return r;
     }
 
-    public Msg readMsg() {
-        Msg msg = null;
+    public Msg readMsg() throws IOException {
+        Msg msg;
         try {
-            String respStr = dis.readUTF();
+            String respStr = server.getDis().readUTF();
+            System.out.println(respStr);
             msg = gson.fromJson(respStr, Msg.class);
-        } catch(Exception e) {
+        } catch(IOException e) {
             System.out.println(e.getMessage());
+            throw e;
         }
         return msg;
     }
 
-    public void sendResp(Resp resp) {
-        String strResp = gson.toJson(resp);
-        try {
-            dos.writeUTF(strResp);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
+//    public void sendResp(Resp resp) {
+//        String strResp = gson.toJson(resp);
+//        try {
+//            dos.writeUTF(strResp);
+//        } catch (IOException e) {
+//            System.out.println(e.getMessage());
+//        }
+//    }
 
     public void sendMsg(Msg msg) {
-        System.out.println(msg.message);
         try {
             String strMsg = gson.toJson(msg);
             System.out.println(strMsg);
-            dos.writeUTF(strMsg);
+            server.getDos().writeUTF(strMsg);
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
