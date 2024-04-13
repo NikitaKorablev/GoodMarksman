@@ -10,6 +10,6 @@ module com.example.goodmarksman {
     exports com.example.goodmarksman;
     exports com.example.goodmarksman.objects;
     exports com.example.goodmarksman.models;
-    opens com.example.goodmarksman.models to javafx.fxml;
     opens com.example.goodmarksman.objects to com.google.gson, javafx.fxml;
+    opens com.example.goodmarksman.models to com.google.gson, javafx.fxml;
 }

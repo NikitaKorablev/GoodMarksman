@@ -12,6 +12,8 @@ public class MainClient extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("start-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
+        MainController controller = fxmlLoader.getController();
+        controller.setPrimaryStage(stage);
         stage.setTitle("Good Marksman!");
         stage.setScene(scene);
         stage.setResizable(false);

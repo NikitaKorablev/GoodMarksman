@@ -57,32 +57,141 @@
          </FlowPane>
          <VBox fx:id="scoreBord" prefHeight="286.0" prefWidth="127.0" style="-fx-border-color: black;">
             <children>
-               <Label text="Счет игрока:">
-                  <font>
-                     <Font name="System Bold" size="16.0" />
-                  </font>
+               <HBox prefHeight="20.0" prefWidth="126.0">
+                  <children>
+                     <Label text="Счет игрока:">
+                        <font>
+                           <Font name="System Bold" size="14.0" />
+                        </font>
+                        <HBox.margin>
+                           <Insets />
+                        </HBox.margin>
+                     </Label>
+                     <Text fx:id="score_1" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
+                        <HBox.margin>
+                           <Insets left="5.0" top="2.0" />
+                        </HBox.margin></Text>
+                  </children>
                   <VBox.margin>
-                     <Insets left="5.0" right="5.0" top="10.0" />
+                     <Insets left="5.0" top="5.0" />
                   </VBox.margin>
-               </Label>
-               <Text fx:id="score" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
+               </HBox>
+               <HBox prefHeight="20.0" prefWidth="126.0">
+                  <children>
+                     <Label text="Выстрелов:">
+                        <font>
+                           <Font name="System Bold" size="14.0" />
+                        </font>
+                        <HBox.margin>
+                           <Insets left="5.0" />
+                        </HBox.margin>
+                     </Label>
+                     <Text fx:id="shots_1" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
+                        <HBox.margin>
+                           <Insets left="5.0" top="2.0" />
+                        </HBox.margin></Text>
+                  </children>
+               </HBox>
+<!--               -->
+               <HBox prefHeight="20.0" prefWidth="126.0">
+                  <children>
+                     <Label text="Счет игрока:">
+                        <HBox.margin>
+                           <Insets />
+                        </HBox.margin>
+                     </Label>
+                     <Text fx:id="score_2" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
+                        <HBox.margin>
+                           <Insets left="5.0" />
+                        </HBox.margin></Text>
+                  </children>
                   <VBox.margin>
-                     <Insets left="5.0" />
+                     <Insets left="5.0" top="10.0" />
                   </VBox.margin>
-               </Text>
-               <Label text="Выстрелов:">
-                  <font>
-                     <Font name="System Bold" size="16.0" />
-                  </font>
+               </HBox>
+               <HBox prefHeight="20.0" prefWidth="126.0">
+                  <children>
+                     <Label text="Выстрелов:">
+<!--                        <font>-->
+<!--                           <Font name="System Bold" size="12.0" />-->
+<!--                        </font>-->
+                        <HBox.margin>
+                           <Insets left="5.0" />
+                        </HBox.margin>
+                     </Label>
+                     <Text fx:id="shots_2" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
+                        <HBox.margin>
+                           <Insets left="5.0" />
+                        </HBox.margin></Text>
+                  </children>
+               </HBox>
+<!--               -->
+               <HBox prefHeight="20.0" prefWidth="126.0">
+                  <children>
+                     <Label text="Счет игрока:">
+                        <HBox.margin>
+                           <Insets />
+                        </HBox.margin>
+                     </Label>
+                     <Text fx:id="score_3" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
+                        <HBox.margin>
+                           <Insets left="5.0" />
+                        </HBox.margin></Text>
+                  </children>
                   <VBox.margin>
-                     <Insets left="5.0" right="5.0" />
+                     <Insets left="5.0" top="10.0" />
                   </VBox.margin>
-               </Label>
-               <Text fx:id="shots" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
+               </HBox>
+               <HBox prefHeight="20.0" prefWidth="126.0">
+                  <children>
+                     <Label text="Выстрелов:">
+                        <!--                        <font>-->
+                        <!--                           <Font name="System Bold" size="12.0" />-->
+                        <!--                        </font>-->
+                        <HBox.margin>
+                           <Insets left="5.0" />
+                        </HBox.margin>
+                     </Label>
+                     <Text fx:id="shots_3" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
+                        <HBox.margin>
+                           <Insets left="5.0" />
+                        </HBox.margin></Text>
+                  </children>
+               </HBox>
+<!--               -->
+               <HBox prefHeight="20.0" prefWidth="126.0">
+                  <children>
+                     <Label text="Счет игрока:">
+                        <HBox.margin>
+                           <Insets />
+                        </HBox.margin>
+                     </Label>
+                     <Text fx:id="score_4" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
+                        <HBox.margin>
+                           <Insets left="5.0" />
+                        </HBox.margin></Text>
+                  </children>
                   <VBox.margin>
-                     <Insets left="5.0" />
+                     <Insets left="5.0" top="10.0" />
                   </VBox.margin>
-               </Text>
+               </HBox>
+               <HBox prefHeight="20.0" prefWidth="126.0">
+                  <children>
+                     <Label text="Выстрелов:">
+                        <!--                        <font>-->
+                        <!--                           <Font name="System Bold" size="12.0" />-->
+                        <!--                        </font>-->
+                        <HBox.margin>
+                           <Insets left="5.0" />
+                        </HBox.margin>
+                     </Label>
+                     <Text fx:id="shots_4" strokeType="OUTSIDE" strokeWidth="0.0" text="0">
+                        <HBox.margin>
+                           <Insets left="5.0" />
+                        </HBox.margin></Text>
+                  </children>
+               </HBox>
+               <!--               -->
             </children>
             <FlowPane.margin>
                <Insets />

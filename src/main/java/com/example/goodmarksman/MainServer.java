@@ -1,12 +1,13 @@
 package com.example.goodmarksman;
 
+import com.example.goodmarksman.models.GameModel;
 import com.example.goodmarksman.objects.Client;
+import com.example.goodmarksman.objects.MsgAction;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 
 public class MainServer {
     private final GameModel m = Models.buildGM();
@@ -31,34 +32,21 @@ public class MainServer {
                 cs = ss.accept();
                 System.out.println("Client connect (" + cs.getPort() + ")");
 
-                Msg connection_accepted = new Msg("", MsgAction.CONNECTED);
-                if (game == null) {
-                    game = new GameServer(cs);
-                    game.sendMsg(
-                            new Client(cs).getDos(),
-                            connection_accepted
-                    );
-                }
-                else {
-                    MsgAction action = game.addPlayer(cs);
-                    System.out.println(action);
-                    if (action == MsgAction.CONNECTION_ERROR) {
-                        game.sendMsg(
-                                new Client(cs).getDos(),
-                                new Msg("Too many players connected to the server", action)
-                                );
-                        cs.close();
-                        continue;
-                    } else if (action == MsgAction.CONNECTED) {
-                        game.sendMsg(
-                                new Client(cs).getDos(),
-                                connection_accepted
-                        );
-                    }
-                }
+                Client cl = new Client(cs);
+                if (game == null) { game = new GameServer(cl); }
+                else { game.addPlayer(cl); }
 
                 m.addObserver((model) -> {
-                    // TODO: при попадании в мишень, отпрака таблицы
+                    System.out.println(cl.getSocket().getPort());
+                    // TODO: список состояния игры
+                    try {
+                        Msg message = new Msg(m.getPlayersData(), MsgAction.UPDATE_GAME_STATE);
+                        cl.sendMsg(message);
+                    } catch (IOException e) {
+                        System.err.println(e.getMessage());
+                        throw new RuntimeException(e);
+                    }
+
 //                    Msg r = new Msg(model.getScoreBoard());
 //                    cl.sendMsg(r);
                 });
