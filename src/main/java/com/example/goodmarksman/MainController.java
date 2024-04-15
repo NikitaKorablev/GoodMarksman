@@ -17,6 +17,7 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -64,9 +65,6 @@ public class MainController implements IObserver {
     @FXML
     private Text shots_4;
 
-    private final ArrayList<Text> scoreList = new ArrayList<>();
-    private final ArrayList<Text> shotsList = new ArrayList<>();
-
     public void setPrimaryStage(Stage primaryStage) { this.primaryStage = primaryStage; }
     public void setGame(GameClient game) { this.game = game; }
     public void setInnetAddress(InetAddress ip) { this.ip = ip; }
@@ -77,6 +75,9 @@ public class MainController implements IObserver {
     public void initialize() {
         m.addObserver(this);
         if (gameView != null && game != null) {
+            ArrayList<Text> scoreList = new ArrayList<>();
+            ArrayList<Text> shotsList = new ArrayList<>();
+
             scoreList.add(score_1);
             scoreList.add(score_2);
             scoreList.add(score_3);
@@ -88,8 +89,8 @@ public class MainController implements IObserver {
             shotsList.add(shots_4);
 
             m.setGameView(gameView);
-//            m.setScoreList(scoreList);
-//            m.setShotsList(scoreList);
+            m.setScoreList(scoreList);
+            m.setShotsList(shotsList);
             m.setSmallTarget(smallTarget);
             m.setBigTarget(bigTarget);
             m.setArrow(arrow);
@@ -98,18 +99,27 @@ public class MainController implements IObserver {
 
     @FXML
     void connect() {
+        System.out.println("Connect called");
+
         if (game != null) return;
 
         try {
-//            System.out.println( == null);
-            primaryStage.setOnCloseRequest(event -> System.exit(0));
+//            primaryStage.setOnCloseRequest(event -> {
+//                try {
+//                    System.out.println("Socket closed");
+//                    server.getSocket().close();
+//                } catch (IOException e) {
+//                    System.err.println("Failed to close socket");
+//                    throw new RuntimeException(e);
+//                }
+//                System.exit(0);
+//            });
 
             playerName = inputNameField.getText();
             if (playerName.isEmpty()) throw new Exception("Player name is empty");
 
-            Socket ss;
             ip = InetAddress.getLocalHost();
-            ss = new Socket(ip, port);
+            Socket ss = new Socket(ip, port);
             System.out.println("ClientStart \n");
 
 
@@ -133,11 +143,11 @@ public class MainController implements IObserver {
             controller.setPlayerName(playerName);
             controller.setServer(server);
 
-            System.out.println(score_1.getText() + " " + shots_1.getText());
+//            System.out.println(score_1.getText() + " " + shots_1.getText());
         } catch (Exception e) {
             // При отключении сервера, клиент уходит в переподключение
             new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
     }
 

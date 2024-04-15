@@ -11,6 +11,7 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
 
+import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -22,7 +23,8 @@ public class GameModel implements Iterable<Score> {
     private Polygon arrow;
     private DAO dao;
     private ArrayList<Text> scoreList;
-    private ArrayList<IObserver> allO = new ArrayList<>();
+    private ArrayList<Text> shotsList;
+    public static ArrayList<IObserver> allO = new ArrayList<>();
 
     public GameModel() {
         this.dao = new DAO();
@@ -35,6 +37,7 @@ public class GameModel implements Iterable<Score> {
     }
 
     public void event() {
+        System.out.println(allO.size());
         for (IObserver o: allO) {
             o.event(this);
         }
@@ -43,31 +46,40 @@ public class GameModel implements Iterable<Score> {
     public void addObserver(IObserver o) {
         allO.add(o);
     }
+    public void removeObserver(IObserver o) {
 
-    public int playersSize() {
-        return dao.playersSize();
     }
 
-    public void addClient(Client cl, Arrow arrow, Score score) {
-        dao.addClient(cl, arrow, score);
-        event();
+    public int playersSize() { return dao.playersSize(); }
+
+    public void addClient(Client cl, Arrow arrow, Score score) throws Exception {
+        try {
+            dao.addClient(cl, arrow, score);
+            event();
+        } catch (Exception e) {
+            System.err.println("Error in addClient() in GameModel object: " + e.getMessage());
+            throw e;
+        }
     }
 
-    public Data getClientData(Socket s) {
-        return dao.getClientData(s.getPort());
+    public void sendMsg(Msg msg) throws IOException {
+        dao.sendMsg(msg);
     }
 
-    public ClientsData getPlayersData() {
-        return dao.getPlayersData();
-    }
+    public Data getClientData(Socket s) { return dao.getClientData(s.getPort()); }
 
-    public int getPlayerIndex(Socket s) {
-        return dao.playerIndex(s.getPort());
-    }
+    public ArrayList<Data> getPlayersData() { return dao.getPlayersData().getClientsData(); }
 
-    public void removePlayer(Client cl) {
-        dao.removeClient(cl);
+    public Client getClient(int port) {
+        if (port == -1) {
+            return dao.getClient(-1);
+        }
+
+        return dao.getClient(dao.playerIndex(port));
     }
+    public int getPlayerIndex(Socket s) { return dao.playerIndex(s.getPort()); }
+
+    public void removePlayer(Client cl) { dao.removeClient(cl); }
 
     public Pane getGameView() { return gameView; }
     public void setGameView(Pane gameView) { this.gameView = gameView; }
@@ -80,4 +92,10 @@ public class GameModel implements Iterable<Score> {
 
     public Polygon getArrow() { return arrow; }
     public void setArrow(Polygon arrow) { this.arrow = arrow; }
+
+    public ArrayList<Text> getScoreList() { return scoreList; }
+    public void setScoreList(ArrayList<Text> scoreList) { this.scoreList = scoreList; }
+
+    public ArrayList<Text> getShotsList() { return shotsList; }
+    public void setShotsList(ArrayList<Text> shotsList) { this.shotsList = shotsList; }
 }

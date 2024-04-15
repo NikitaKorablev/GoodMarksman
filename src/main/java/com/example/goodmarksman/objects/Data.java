@@ -19,7 +19,7 @@ public class Data {
     public String getPlayerName() { return playerName; }
     public void setPlayerName(String playerName) { this.playerName = playerName; }
 
-    public int getPlayerPort() { return playerPort; }
+    public int getPlayerPort() { return this.playerPort; }
     public void setPlayerPort(int playerPort) { this.playerPort = playerPort; }
 
     public Arrow getArrow() { return arrow; }

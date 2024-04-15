@@ -3,6 +3,7 @@ package com.example.goodmarksman;
 //import com.example.goodmarksman.models.Game;
 import com.example.goodmarksman.objects.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Spliterator;
@@ -18,24 +19,41 @@ public class DAO implements Iterable<Score> {
         return players.size();
     }
 
-    public void addClient(Client cl, Arrow arrow, Score score) {
+    public void addClient(Client cl, Arrow arrow, Score score) throws Exception {
+        if (players.contains(cl) || clientsData.getIndex(cl.getSocket().getPort()) != -1) {
+            throw new Exception("Player is already added.");
+        }
+
         players.add(cl);
         clientsData.add("", cl.getSocket().getPort(),
                 arrow, score);
     }
 
+    public void sendMsg(Msg msg) throws IOException {
+        if (msg.portOwner == -1) throw new IOException("Port owner not set.");
+        Client client = players.get(playerIndex(msg.portOwner));
+        client.sendMsg(msg);
+    }
+
+    public Client getClient(int ind) {
+        if (ind == -1 && !players.isEmpty()) { return players.get(players.size() - 1); }
+        return players.get(ind);
+    }
+
     public void removeClient(Client cl) {
-        clientsData.remove(players.indexOf(cl));
+        clientsData.remove(cl.getSocket().getPort());
         players.remove(cl);
     }
 
     public int playerIndex(int port) {
-        int i = 0;
-        for (Client cl : players) {
-            if (cl.getSocket().getPort() == port) { return i; }
-            i++;
-        }
-        return -1;
+        return clientsData.getIndex(port);
+
+//        int i = 0;
+//        for (Client cl : players) {
+//            if (cl.getSocket().getPort() == port) { return i; }
+//            i++;
+//        }
+//        return -1;
     }
 
     public Data getClientData(int port) {

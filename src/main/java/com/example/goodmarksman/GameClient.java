@@ -16,6 +16,7 @@ public class GameClient implements IObserver {
 
     MsgAction gameState = MsgAction.GAME_STOPPED;
     ClientState clientState = ClientState.NOT_READY;
+    public Thread messageListener;
 
     private Client server;
     private ArrayList<Client> players = new ArrayList<>();
@@ -27,9 +28,12 @@ public class GameClient implements IObserver {
     // Подключение к серверу
     public GameClient(Client server) throws Exception {
         this.server = server;
-        System.out.println("Client connected");
+        System.out.println("Client connected to " + server.getSocket().getLocalPort());
 
-        new Thread(this::messageListener).start();
+//        new Thread(this::messageListener).start();
+        messageListener = new Thread(this::messageListener);
+        messageListener.setDaemon(true);
+        messageListener.start();
 //        new Thread(this::run).start();
     }
 
@@ -37,9 +41,9 @@ public class GameClient implements IObserver {
 //        boolean listening = true;
 
         while (true) {
+            System.out.println("Message received");
             try {
                 Msg msg = server.readMsg();
-//                System.out.println(msg);
 //                if (msg.getAction() == MsgAction.CONNECTED) {
 ////                    System.out.println(msg.message);
 ////                    server.setConnected(true);
@@ -51,17 +55,19 @@ public class GameClient implements IObserver {
 //                    nameChecked = true;
 //                    listening = false;
                     server.getSocket().close();
+                    System.err.println("Socket was closed!");
                     continue;
                 }
                 if (msg.getAction() == MsgAction.UPDATE_GAME_STATE) {
-//                    System.out.println(msg.clientsData);
+                    System.out.println(msg.clientsData);
                     continue;
                 }
             } catch (IOException e) {
-                System.err.println(e.getMessage());
+                System.err.println("Message Listener error: " + e.getMessage());
                 return;
             }
         }
+//        System.out.println("Server disconnected");
     }
 
     //TODO: Запуск цикла клиентской части

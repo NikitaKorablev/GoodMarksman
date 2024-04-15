@@ -11,8 +11,10 @@ public class Msg {
 //    ArrayList<Client> players = null;
 //    ArrayList<Arrow> arrows = null;
 //    ArrayList<Score> score = null;
-    ClientsData clientsData = null;
+//    ClientsData clientsData = null;
+    ArrayList<Data> clientsData = null;
     String message = null;
+    int portOwner = -1;
 
 //    public Msg(ArrayList<Score> scoreBoard, MsgAction action) {
 //        this.scoreBoard = scoreBoard;
@@ -40,7 +42,12 @@ public class Msg {
 //        this.action = action;
 //    }
 
-    public Msg(ClientsData data, MsgAction action) {
+    public Msg(ArrayList<Data> data, MsgAction action) {
+        this.clientsData = data;
+        this.action = action;
+    }
+
+    public Msg(int port, ArrayList<Data> data, MsgAction action) {
         this.clientsData = data;
         this.action = action;
     }
@@ -53,9 +60,9 @@ public class Msg {
         return action;
     }
 
-    public ArrayList<Score> getPoints() {
-        return scoreBoard;
-    }
+//    public ArrayList<Score> getPoints() {
+//        return scoreBoard;
+//    }
 
     public Msg() {}
 
@@ -63,8 +70,9 @@ public class Msg {
     public String toString() {
         return "Msg{" +
                 "action=" + action +
-//                ", players=" + players +
-//                ", scoreBoard=" + scoreBoard +
+                ", clientState=" + clientState +
+                ", scoreBoard=" + scoreBoard +
+                ", clientsData=" + clientsData +
                 ", message='" + message + '\'' +
                 '}';
     }

@@ -1,10 +1,12 @@
 package com.example.goodmarksman.objects;
 
+import com.example.goodmarksman.IObserver;
 import com.example.goodmarksman.Msg;
 import com.google.gson.Gson;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class Client {
     Socket cs = null;
@@ -13,6 +15,8 @@ public class Client {
     DataInputStream dis = null;
     DataOutputStream dos = null;
     Gson gson = new Gson();
+
+    IObserver observer = null;
 
 //    Arrow arrow = null;
 //    Score score = null;
@@ -28,7 +32,7 @@ public class Client {
             os = this.cs.getOutputStream();
             dos = new DataOutputStream(os);
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
             throw new RuntimeException(e);
         }
 
@@ -49,6 +53,9 @@ public class Client {
     public DataOutputStream getDos() { return dos; }
     public void setDos(DataOutputStream dos) { this.dos = dos; }
 
+    public void setIObserver(IObserver observer) { this.observer = observer; }
+    public IObserver getIObserver() { return observer; }
+
 //    public boolean isConnected() { return isConnected; }
 //    public void setConnected(boolean connected) { isConnected = connected; }
 
@@ -58,20 +65,6 @@ public class Client {
 //    public Score getScore() { return score; }
 //    public void setScore(Score score) { this.score = score; }
 
-    @Override
-    public String toString() {
-        return "Client{" +
-                "cs=" + cs +
-//                ", arrow=" + arrow +
-//                ", score=" + score +
-//                ", isConnected=" + isConnected +
-//                ", is=" + is +
-//                ", os=" + os +
-//                ", dis=" + dis +
-//                ", dos=" + dos +
-                '}';
-    }
-
     public Msg readMsg() throws IOException {
         Msg msg;
         try {
@@ -79,7 +72,7 @@ public class Client {
             System.out.println(respStr);
             msg = gson.fromJson(respStr, Msg.class);
         } catch(IOException e) {
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
             throw e;
         }
         return msg;
@@ -87,13 +80,32 @@ public class Client {
 
     public void sendMsg(Msg msg) throws IOException {
         try {
-            System.err.println(msg);
+            System.out.println(msg);
             String strMsg = gson.toJson(msg);
             dos.writeUTF(strMsg);
         } catch (Exception e) {
             System.err.println(msg);
-            System.err.println(e.getMessage());
+            System.err.println("Error in sendMessage(): " + e.getMessage());
             throw e;
         }
+    }
+
+    public void sendState(ArrayList<Data> data) {
+        try {
+//            System.out.println(cl.getSocket().getPort());
+
+            Msg message = new Msg(data, MsgAction.UPDATE_GAME_STATE);
+            sendMsg(message);
+        } catch (IOException e) {
+            System.err.println("Error of send data: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "cs=" + cs +
+                '}';
     }
 }

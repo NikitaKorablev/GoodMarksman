@@ -5,15 +5,13 @@ import com.example.goodmarksman.objects.*;
 import com.google.gson.Gson;
 
 import java.io.*;
-import java.net.Socket;
 import java.util.ArrayList;
 
 public class GameServer implements IObserver {
     GameModel m = Models.buildGM();
     Gson gson = new Gson();
 
-
-    private final ArrayList<Thread> threads = new ArrayList<>();
+    private final ArrayList<Thread> messageListeners = new ArrayList<>();
     private Thread gameThread = null;
 
     MsgAction gameState = MsgAction.GAME_STOPPED;
@@ -27,6 +25,7 @@ public class GameServer implements IObserver {
         addPlayer(cl);
 
         gameThread = new Thread(this::run);
+        gameThread.setDaemon(true);
 //        new Thread(this::run).start();
     }
 
@@ -38,28 +37,35 @@ public class GameServer implements IObserver {
                         MsgAction.CONNECTION_ERROR)
                 );
             } catch (IOException e) {
-                System.err.println(e.getMessage());
+                System.err.println("Add player Error: " + e.getMessage());
                 throw new RuntimeException(e);
             }
 
             return;
         }
 
-        m.addClient(cl, new Arrow(), new Score());
-        Thread thread = new Thread(() -> messageListener(cl)); thread.start();
-        threads.add(thread);
+        try {
+            m.addClient(cl, new Arrow(), new Score());
+        } catch (Exception e) {
+            System.err.println("Error in addPlayer() in GameServer: " + e.getMessage());
+            throw new RuntimeException(e);
+        }
+        Thread thread = new Thread(() -> messageListener(cl));
+        thread.setDaemon(true);
+        thread.start();
+        messageListeners.add(thread);
         System.out.println("new players count " + m.playersSize());
-        sendState(cl);
+        cl.sendState(m.getPlayersData());
     }
 
     void messageListener(Client cl) {
-        System.out.println(m.getClientData(cl.getSocket()));
+//        System.out.println(m.getClientData(cl.getSocket()));
 
         while (true) {
             try {
                 Msg msg = cl.readMsg();
                 if (msg.getAction() == MsgAction.CONNECTED) {
-                    System.out.println(msg.message);
+                    System.out.println("Client say: " + msg.message);
                     continue;
                 }
                 if (msg.getAction() == MsgAction.CONNECTION_ERROR) {
@@ -75,16 +81,29 @@ public class GameServer implements IObserver {
                 }
                 if (msg.getAction() == MsgAction.GAME_STOPPED &&
                     gameThread != null && gameThread.isAlive()) {
+                    //TODO: Возможно надо wait()
                     gameThread.interrupt();
                     gameThread = null;
                     continue;
                 }
 
             } catch (Exception e) {
-                System.err.println("Client " + cl.getSocket().getPort() + " disconnected: " + e.getMessage());
+                try {
+                    cl.getSocket().close();
+                    System.err.println("Client " + cl.getSocket().getPort() + " closed.");
+                    synchronized (this) {
+                        messageListeners.remove(m.getPlayerIndex(cl.getSocket()));
+                        m.removePlayer(cl);
+                        m.removeObserver(cl.getIObserver());
+//                        m.
+//                        System.out.println(m.getPlayersData());
+                    }
+                } catch (Exception err) {
+                    System.err.println(err.getMessage());
+                    throw new RuntimeException(err);
+                }
 
-                threads.remove(m.getPlayerIndex(cl.getSocket()));
-                m.removePlayer(cl);
+                System.err.println("Remove is called");
                 return;
             }
         }
@@ -97,27 +116,8 @@ public class GameServer implements IObserver {
         }
     }
 
-    public void sendState(Client cl) {
-        try {
-//            System.out.println(cl.getSocket().getPort());
-
-            Msg message = new Msg(m.getPlayersData(), MsgAction.UPDATE_GAME_STATE);
-            cl.sendMsg(message);
-        } catch (IOException e) {
-            System.err.println(e.getMessage());
-            throw new RuntimeException(e);
-        }
-    }
-
-    public Resp readResp(DataInputStream dis) {
-        Resp r = null;
-        try {
-            String respStr = dis.readUTF();
-            r = gson.fromJson(respStr, Resp.class);
-        } catch(Exception e) {
-            System.out.println(e.getMessage());
-        }
-        return r;
+    public Client getLastClient() {
+        return m.getClient(-1);
     }
 
     @Override
