@@ -1,38 +1,50 @@
 package com.example.goodmarksman.objects;
 
-import javafx.application.Platform;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 
 public class Arrow {
 //    Polygon arrow = null;
     private int ownerPort;
     private final int moveSpeed = 10;
+    private final Double[] points = new Double[]{-30.0, 5.0, 0.0, 0.0, -30.0, -5.0};
     private boolean isShooting = false;
     private int layoutX = 38, layoutY = 122;
+    private COLORS colorName = COLORS.NULL;
+//    private Color colorValue = null;
 
-    public Arrow(Polygon arrow) {
+    public Arrow(Polygon arrow, int ownerPort) {
         layoutX = (int) arrow.getLayoutX();
         layoutY = (int) arrow.getLayoutY();
+        this.ownerPort = ownerPort;
 //        this.arrow = arrow;
     }
-    public Arrow() {
+    public Arrow(int ownerPort) {
+        this.ownerPort = ownerPort;
 //        this.arrow = new Polygon();
 //        this.layoutX = 38;
 //        this.arrow.setLayoutY(y);
 //        this.arrow.getPoints().addAll(-30.0, 5.0, 0.0, 0.0, -30.0, -5.0);
     }
+    public Arrow() {}
     public Arrow(Arrow a) {
-//        this.arrow = new Polygon();
+        this.ownerPort = a.getOwnerPort();
+        this.colorName = a.getColorName();
         this.layoutX = a.layoutX;
         this.layoutY = a.layoutY;
-//        this.arrow.setLayoutX(a.layoutX);
-//        this.arrow.setLayoutY(a.y);
-//        this.arrow.getPoints().addAll(-30.0, 5.0, 0.0, 0.0, -30.0, -5.0);
     }
+
+    public void setColor(COLORS color) {
+        this.colorName = color;
+    }
+    public COLORS getColorName() { return colorName; }
 
     public Polygon getPolygon() {
         Polygon polygon = new Polygon();
-        polygon.getPoints().addAll(-30.0, 5.0, 0.0, 0.0, -30.0, -5.0);
+        polygon.getPoints().addAll(this.points);
+        polygon.setStroke(Color.BLACK);
+        polygon.setStrokeWidth(1);
+        polygon.setFill(this.colorName.getValue());
         polygon.setLayoutX(this.layoutX);
         polygon.setLayoutY(this.layoutY);
 
@@ -66,6 +78,15 @@ public class Arrow {
                 ", isShooting=" + isShooting +
                 ", layoutX=" + layoutX +
                 ", layoutY=" + layoutY +
+                ", colorName=" + colorName +
+//                ", colorValue=" + colorValue +
                 '}';
     }
+//        private void paint(COLORS color) {
+//        switch (color) {
+//            case RED -> target.setColor(Color.rgb(255, 33, 33));
+//            case BLUE -> target.setColor(Color.rgb(33, 212, 255));
+//            case GREEN -> target.setColor(Color.rgb(0, 128, 0));
+//        }
+//    }
 }

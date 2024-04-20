@@ -1,5 +1,7 @@
 package com.example.goodmarksman;
 
+import com.example.goodmarksman.models.GameModel;
+import com.example.goodmarksman.objects.Client;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -8,12 +10,17 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class MainClient extends Application {
+    public static final GameModel m = Models.buildGM();
+    public static GameClient game = null;
+    public static Client server = null;
+    public static String playerName = "";
+    public static Stage primaryStage;
+
     @Override
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(App.class.getResource("start-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
-        MainController controller = fxmlLoader.getController();
-        controller.setPrimaryStage(stage);
+        primaryStage = stage;
         stage.setTitle("Good Marksman!");
         stage.setScene(scene);
         stage.setResizable(false);

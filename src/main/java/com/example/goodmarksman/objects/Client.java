@@ -9,6 +9,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 
 public class Client {
+    String name = "";
     Socket cs = null;
     InputStream is = null;
     OutputStream os = null;
@@ -20,7 +21,6 @@ public class Client {
 
 //    Arrow arrow = null;
 //    Score score = null;
-
 
     public Client(Socket cs) {
         this.cs = cs;
@@ -39,6 +39,12 @@ public class Client {
 //        this.arrow = arrow == null ? new Arrow() : arrow;
 //        this.score = score == null ? new Score() : score;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getName() { return name; }
+
     public Socket getSocket() { return cs; }
 
     public InputStream getIs() { return is; }
@@ -72,7 +78,7 @@ public class Client {
             System.out.println(respStr);
             msg = gson.fromJson(respStr, Msg.class);
         } catch(IOException e) {
-            System.err.println(e.getMessage());
+            System.err.println("Read msg error: " + e.getMessage());
             throw e;
         }
         return msg;
@@ -80,7 +86,7 @@ public class Client {
 
     public void sendMsg(Msg msg) throws IOException {
         try {
-            System.out.println(msg);
+//            System.out.println(msg);
             String strMsg = gson.toJson(msg);
             dos.writeUTF(strMsg);
         } catch (Exception e) {
@@ -90,7 +96,7 @@ public class Client {
         }
     }
 
-    public void sendState(ArrayList<Data> data) {
+    public void sendState(ArrayList<ClientData> data) {
         try {
 //            System.out.println(cl.getSocket().getPort());
 

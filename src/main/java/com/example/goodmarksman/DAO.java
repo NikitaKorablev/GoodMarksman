@@ -2,8 +2,17 @@ package com.example.goodmarksman;
 
 //import com.example.goodmarksman.models.Game;
 import com.example.goodmarksman.objects.*;
+import javafx.application.Platform;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Polygon;
+import javafx.scene.text.Text;
 
 import java.io.IOException;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Spliterator;
@@ -12,8 +21,19 @@ import java.util.function.Consumer;
 //TODO: Будет отвечать за ведение счета всех игроков
 // и хранение игровых объектов
 public class DAO implements Iterable<Score> {
-    ClientsData clientsData = new ClientsData();
-    ArrayList<Client> players = new ArrayList<>();
+    private Pane gameView;
+    private Circle smallTarget;
+    private Circle bigTarget;
+    private Polygon arrow;
+
+    private final ArrayList<Polygon> arrows = new ArrayList<>();
+
+    private ArrayList<Text> scoreList = new ArrayList<>();
+    private ArrayList<Text> shotsList  = new ArrayList<>();
+    private ArrayList<HBox> statisticBoxes = new ArrayList<>();
+
+    private final ClientsDataArray clientsData = new ClientsDataArray();
+    private final ArrayList<Client> players = new ArrayList<>();
 
     public int playersSize() {
         return players.size();
@@ -26,8 +46,10 @@ public class DAO implements Iterable<Score> {
 
         players.add(cl);
         clientsData.add("", cl.getSocket().getPort(),
-                arrow, score);
+                arrow, score).setPlayerName(cl.getName());
     }
+
+    public ClientsDataArray getClientsData() { return this.clientsData; }
 
     public void sendMsg(Msg msg) throws IOException {
         if (msg.portOwner == -1) throw new IOException("Port owner not set.");
@@ -40,6 +62,10 @@ public class DAO implements Iterable<Score> {
         return players.get(ind);
     }
 
+    public void setClientName(Socket s, String name) {
+        clientsData.setClientName(s.getPort(), name);
+    }
+
     public void removeClient(Client cl) {
         clientsData.remove(cl.getSocket().getPort());
         players.remove(cl);
@@ -47,24 +73,168 @@ public class DAO implements Iterable<Score> {
 
     public int playerIndex(int port) {
         return clientsData.getIndex(port);
-
-//        int i = 0;
-//        for (Client cl : players) {
-//            if (cl.getSocket().getPort() == port) { return i; }
-//            i++;
-//        }
-//        return -1;
     }
 
-    public Data getClientData(int port) {
+    public ClientData getClientData(int port) {
         return clientsData.getData(port);
     }
 
-    public ClientsData getPlayersData() {
+    public ClientsDataArray getPlayersData() {
         return clientsData;
     }
 
-//    ArrayList<Score> scoreBoard = new ArrayList<>();
+    public void setClientsData(ArrayList<ClientData> clientsData) {
+        this.clientsData.setClientsData(clientsData);
+    }
+
+    public Pane getGameView() { return gameView; }
+    public void setGameView(Pane gameView) { this.gameView = gameView; }
+
+    public Circle getSmallTarget() { return smallTarget; }
+    public void setSmallTarget(Circle smallTarget) { this.smallTarget = smallTarget; }
+
+    public Circle getBigTarget() { return bigTarget; }
+    public void setBigTarget(Circle bigTarget) { this.bigTarget = bigTarget; }
+
+    public Polygon getArrow() { return arrow; }
+    public void setArrow(Polygon arrow) { this.arrow = arrow; }
+
+    public ArrayList<Text> getScoreList() { return scoreList; }
+    public void setScoreList(ArrayList<Text> scoreList) { this.scoreList = scoreList; }
+
+    public ArrayList<Text> getShotsList() { return shotsList; }
+    public void setShotsList(ArrayList<Text> shotsList) { this.shotsList = shotsList; }
+
+    public ArrayList<HBox> getStatisticBoxes() { return statisticBoxes; }
+    public void setStatisticBoxes(ArrayList<HBox> statisticBoxes) {
+        System.err.println("DAO: " + statisticBoxes);
+        this.statisticBoxes = statisticBoxes;
+        System.err.println("DAO: " + this.statisticBoxes);
+    }
+
+    public Polygon getEnemyArrow(COLORS color) {
+        if (arrows.isEmpty()) return null;
+
+        for (Polygon arrow : arrows) {
+            if (arrow.getFill().equals(color.getValue())) return arrow;
+        }
+
+        return null;
+    }
+
+    public void updateArrow(Arrow arrow) {
+        if (arrow.getOwnerPort() == -1) { throw new NullPointerException(); }
+//        System.err.println("Server port: " + MainClient.game.getServerPort());
+        if (arrow.getOwnerPort() == MainClient.game.getServerPort()) {
+//            System.err.println("My color is: " + arrow.getColorName());
+            Platform.runLater(() -> {
+                this.arrow.setLayoutX(arrow.getX());
+//                this.arrow.setLayoutY(arrow.getY());
+//                System.err.println(this.arrow);
+
+                try {
+                    this.arrow.setFill(arrow.getColorName().getValue());
+                } catch (Error e) {
+                    System.err.println(e.getMessage());
+                }
+            });
+        } else {
+//            System.err.println("Enemy color is: " + arrow.getColorName());
+            Platform.runLater(() -> {
+                Polygon poly = getEnemyArrow(arrow.getColorName());
+                if (poly == null) {
+                    poly = arrow.getPolygon();
+                    this.gameView.getChildren().add(poly);
+                }
+                arrows.add(poly);
+//                System.err.println(poly);
+
+                poly.setLayoutX(arrow.getX());
+                poly.setLayoutY(arrow.getY());
+                try {
+                    poly.setFill(arrow.getColorName().getValue());
+                } catch (Error e) {
+                    System.err.println(e.getMessage());
+                }
+            });
+        }
+    }
+
+//    public HBox getEnemyArrow(int ) {
+//        if (arrows.isEmpty()) return null;
+//
+//        for (Polygon arrow : arrows) {
+//            if (arrow.getFill().equals(color.getValue())) return arrow;
+//        }
+//
+//        return null;
+//    }
+
+    public void updateScore(Score score, COLORS arrowColor) {
+//        System.err.println("score: " + score);
+//        System.err.println("score: " + statisticBoxes);
+
+        if (score.getOwnerPort() == -1) { throw new NullPointerException(); }
+//        System.err.println("Server port: " + MainClient.game.getServerPort());
+        if (score.getOwnerPort() == MainClient.game.getServerPort()) {
+            System.err.println("children: " + statisticBoxes.get(0).getChildren());
+            Platform.runLater(() -> {
+                for (Node node: statisticBoxes.get(0).getChildren()) {
+                    if (node instanceof Circle circle) {
+                        circle.setFill(arrowColor.getValue());
+                    } else if (node instanceof Label label) {
+                        label.setText(score.getPlayerName());
+                    }
+                }
+
+                this.scoreList.get(0).setText(String.valueOf(score.getScore()));
+                this.shotsList.get(0).setText(String.valueOf(score.getShotCount()));
+            });
+        } else {
+            System.err.println("score: " + score);
+            Platform.runLater(() -> {
+                int i = 0;
+                for (HBox box: statisticBoxes) {
+                    if (i == 0)  {
+                        ++i;
+                        continue;
+                    }
+
+                    Circle circle = null;
+                    Label label = null;
+                    for (Node node: box.getChildren()) {
+                        if (node instanceof Circle)
+                            circle = (Circle) node;
+                        else if (node instanceof Label)
+                            label = (Label) node;
+                    }
+
+                    if (circle != null && label != null) {
+                        if (label.getText().equals(score.getPlayerName())) {
+                            this.scoreList.get(i).setText(String.valueOf(score.getScore()));
+                            this.shotsList.get(i).setText(String.valueOf(score.getShotCount()));
+
+                            return;
+                        } else if (label.getText().isEmpty()) {
+                            circle.setFill(arrowColor.getValue());
+                            label.setText(score.getPlayerName());
+
+                            this.scoreList.get(i).setText(String.valueOf(score.getScore()));
+                            this.shotsList.get(i).setText(String.valueOf(score.getShotCount()));
+
+                            return;
+                        }
+                    }
+
+                    ++i;
+                }
+
+            });
+        }
+
+    }
+
+    //    ArrayList<Score> scoreBoard = new ArrayList<>();
 
 //    public Game getGame(Circle target1, Circle target2, Polygon arrow) {
 ////        return new Game(target1, target2, arrow);

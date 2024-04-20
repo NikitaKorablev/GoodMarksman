@@ -10,7 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class MainServer {
-    private static final GameModel m = Models.buildGM();
+    public static final GameModel m = Models.buildGM();
 
     int port = 3000;
     InetAddress ip = null;
@@ -33,12 +33,15 @@ public class MainServer {
                 System.out.println("Client connect (" + cs.getPort() + ")");
 
                 Client cl = getClient(cs);
-                if (game == null) { game = new GameServer(cl); }
-                else { game.addPlayer(cl); }
-//                System.out.println(cl.getSocket().getPort());
 
-//                Client c = new Client(cs);
-//                m.addObserver();
+                synchronized (Thread.currentThread()) {
+                    if (game == null) { game = new GameServer(cl); }
+                    else {
+                        game.addListener(cl).start();
+                    }
+
+                    m.addObserver(cl.getIObserver());
+                }
             }
 
         } catch (IOException ex) {
@@ -48,24 +51,20 @@ public class MainServer {
 
     private static Client getClient(Socket cs) {
         Client cl = new Client(cs);
+        try {
+            cl.sendMsg(new Msg("", MsgAction.CLIENT_CONNECTED));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
         cl.setIObserver((model) -> {
-//                    Client curClient = game.getLastClient();
-//                    System.out.println(curClient.getSocket().getPort());
-//                    System.out.println("allo size: " + GameModel.allO.size());
-//                    System.out.println(p);
             try {
                 Msg message = new Msg(m.getPlayersData(), MsgAction.UPDATE_GAME_STATE);
-                System.out.println(message);
+//                System.out.println("Server Observer: " + message);
                 cl.sendMsg(message);
-//                        model.getClient(finalCs).sendMsg(message);
-//                        cl.sendMsg(message);
             } catch (IOException e) {
                 System.err.println("Event error: " + e.getMessage());
-                throw new RuntimeException(e);
             }
-
-//                    Msg r = new Msg(model.getScoreBoard());
-//                    cl.sendMsg(r);
         });
         return cl;
     }

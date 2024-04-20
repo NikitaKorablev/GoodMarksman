@@ -1,21 +1,23 @@
 package com.example.goodmarksman.objects;
 
-import javafx.application.Platform;
 import javafx.scene.text.Text;
-
-import java.net.Socket;
 
 public class Score {
 //    Text score = null;
 //    Text shotCount = null;
-    int scoreValue = 0;
-    int shotCountValue = 0;
+    private int portOwner;
+    private String playerName = "";
+    private int scoreValue = 0;
+    private int shotCountValue = 0;
 
     public Score(Text score, Text shot) {
 //        this.score = score;
 //        this.shotCount = shot;
         this.scoreValue = Integer.parseInt(score.getText());
         this.shotCountValue = Integer.parseInt(shot.getText());
+    }
+    public Score(int port) {
+        this.portOwner = port;
     }
     public Score() {
 //        this.score = new Text();
@@ -44,6 +46,12 @@ public class Score {
         this.scoreValue = 0;
     }
 
+    public String getPlayerName() { return this.playerName; }
+    public void setPlayerName(String playerName) { this.playerName = playerName; }
+
+    public int getOwnerPort() { return this.portOwner; }
+    public void setOwnerPort(int port) { this.portOwner = port; }
+
     public int getShotCount() { return this.shotCountValue; }
     public void setShotCount(int i) {
         this.shotCountValue = i;
@@ -61,9 +69,9 @@ public class Score {
     @Override
     public String toString() {
         return "Score{" +
-//                "score=" + score +
-//                ", shotCount=" + shotCount +
-                "scoreValue=" + scoreValue +
+                "portOwner=" + portOwner +
+                ", playerName='" + playerName + '\'' +
+                ", scoreValue=" + scoreValue +
                 ", shotCountValue=" + shotCountValue +
                 '}';
     }

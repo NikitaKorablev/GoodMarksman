@@ -6,38 +6,33 @@ import com.example.goodmarksman.DAO;
 import com.example.goodmarksman.IObserver;
 import com.example.goodmarksman.Msg;
 import com.example.goodmarksman.objects.*;
-import javafx.scene.layout.Pane;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
-import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Iterator;
 
-public class GameModel implements Iterable<Score> {
-    private Pane gameView;
-    private Circle smallTarget;
-    private Circle bigTarget;
-    private Polygon arrow;
-    private DAO dao;
-    private ArrayList<Text> scoreList;
-    private ArrayList<Text> shotsList;
-    public static ArrayList<IObserver> allO = new ArrayList<>();
+public class GameModel {
+
+    private static DAO dao;
+    private static final ArrayList<IObserver> allO = new ArrayList<>();
 
     public GameModel() {
-        this.dao = new DAO();
+        dao = new DAO();
     }
 
-    //TODO: ХЗ зачем оно мне надо
-    @Override
-    public Iterator<Score> iterator() {
-        return dao.iterator();
+    public static ArrayList<IObserver> getAllO() {
+        return allO;
     }
+
+    public DAO getDao() { return dao; }
+
+//    @Override
+//    public Iterator<Score> iterator() {
+//        return dao.iterator();
+//    }
 
     public void event() {
-        System.out.println(allO.size());
+        System.out.println("Allo size: " + allO.size());
         for (IObserver o: allO) {
             o.event(this);
         }
@@ -47,7 +42,7 @@ public class GameModel implements Iterable<Score> {
         allO.add(o);
     }
     public void removeObserver(IObserver o) {
-
+        allO.remove(o);
     }
 
     public int playersSize() { return dao.playersSize(); }
@@ -66,9 +61,16 @@ public class GameModel implements Iterable<Score> {
         dao.sendMsg(msg);
     }
 
-    public Data getClientData(Socket s) { return dao.getClientData(s.getPort()); }
+    public ClientData getClientData(Socket s) { return dao.getClientData(s.getPort()); }
+    public void setClientsData(ArrayList<ClientData> clientsData) {
+        dao.setClientsData(clientsData);
+    }
 
-    public ArrayList<Data> getPlayersData() { return dao.getPlayersData().getClientsData(); }
+    public void setClientName(Socket s, String name) {
+        dao.setClientName(s, name);
+    }
+
+    public ArrayList<ClientData> getPlayersData() { return dao.getPlayersData().getClientsData(); }
 
     public Client getClient(int port) {
         if (port == -1) {
@@ -81,21 +83,10 @@ public class GameModel implements Iterable<Score> {
 
     public void removePlayer(Client cl) { dao.removeClient(cl); }
 
-    public Pane getGameView() { return gameView; }
-    public void setGameView(Pane gameView) { this.gameView = gameView; }
-
-    public Circle getSmallTarget() { return smallTarget; }
-    public void setSmallTarget(Circle smallTarget) { this.smallTarget = smallTarget; }
-
-    public Circle getBigTarget() { return bigTarget; }
-    public void setBigTarget(Circle bigTarget) { this.bigTarget = bigTarget; }
-
-    public Polygon getArrow() { return arrow; }
-    public void setArrow(Polygon arrow) { this.arrow = arrow; }
-
-    public ArrayList<Text> getScoreList() { return scoreList; }
-    public void setScoreList(ArrayList<Text> scoreList) { this.scoreList = scoreList; }
-
-    public ArrayList<Text> getShotsList() { return shotsList; }
-    public void setShotsList(ArrayList<Text> shotsList) { this.shotsList = shotsList; }
+    public void updateState() {
+        System.out.println("update state out: " + dao.getPlayersData().getClientsData());
+        if (dao.getPlayersData().getClientsData().isEmpty()) return;
+        System.out.println("update state out: " + dao.getPlayersData().getClientsData());
+        event();
+    }
 }
