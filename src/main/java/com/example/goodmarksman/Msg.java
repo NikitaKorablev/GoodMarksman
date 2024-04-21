@@ -1,12 +1,12 @@
 package com.example.goodmarksman;
 
 import com.example.goodmarksman.objects.*;
-import javafx.scene.shape.Polygon;
+import com.example.goodmarksman.objects.Action;
 
 import java.util.ArrayList;
 
 public class Msg {
-    MsgAction action = null;
+    Action action = null;
     ClientState clientState = null;
     ArrayList<Score> scoreBoard = null;
     Arrow arrow = null;
@@ -14,8 +14,9 @@ public class Msg {
 //    ArrayList<Arrow> arrows = null;
 //    ArrayList<Score> score = null;
 //    ClientsData clientsData = null;
-    ArrayList<ClientData> clientsData = null;
+    ClientsDataArray clientsData = null;
     String message = null;
+    int int_message;
     int portOwner = -1;
 
 //    public Msg(ArrayList<Score> scoreBoard, MsgAction action) {
@@ -27,17 +28,22 @@ public class Msg {
         this.scoreBoard = scoreBoard;
     }
 
-    public Msg(String message, MsgAction action) {
+    public Msg(String message, Action action) {
         this.action = action;
         this.message = message;
     }
 
-    public Msg(ClientState state, MsgAction action) {
+    public Msg(int int_message, Action action) {
+        this.action = action;
+        this.int_message = int_message;
+    }
+
+    public Msg(ClientState state, Action action) {
         this.clientState = state;
         this.action = action;
     }
 
-    public Msg(Arrow arrow, MsgAction action) {
+    public Msg(Arrow arrow, Action action) {
         this.arrow = arrow;
         this.action = action;
     }
@@ -49,15 +55,8 @@ public class Msg {
 //        this.action = action;
 //    }
 
-    public Msg(ArrayList<ClientData> data, MsgAction action) {
-        this.clientsData = data;
-        this.action = action;
-    }
-
-
-
-    public Msg(int port, ArrayList<ClientData> data, MsgAction action) {
-        this.clientsData = data;
+    public Msg(ClientsDataArray dataArray, Action action) {
+        this.clientsData = dataArray;
         this.action = action;
     }
 
@@ -65,7 +64,7 @@ public class Msg {
         this.message = message;
     }
 
-    public MsgAction getAction() {
+    public Action getAction() {
         return action;
     }
 
@@ -84,6 +83,7 @@ public class Msg {
                 ", arrow=" + arrow +
                 ", clientsData=" + clientsData +
                 ", message='" + message + '\'' +
+                ", int_message=" + int_message +
                 ", portOwner=" + portOwner +
                 '}';
     }

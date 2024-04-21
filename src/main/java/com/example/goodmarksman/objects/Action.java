@@ -1,13 +1,14 @@
 package com.example.goodmarksman.objects;
 
-public enum MsgAction {
-    GAME_START,
-    GAME_PAUSE,
+public enum Action {
+    GAME_STARTED,
+    GAME_PAUSED,
     GAME_STOPPED,
     CLIENT_CONNECTED,
     CONNECT,
     CONNECTION_ERROR,
     CLIENT_STATE,
     UPDATE_GAME_STATE,
-    SET_NAME
+    SET_NAME,
+    WIDTH_INIT
 }

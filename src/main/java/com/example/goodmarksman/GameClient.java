@@ -2,18 +2,12 @@ package com.example.goodmarksman;
 
 import com.example.goodmarksman.models.GameModel;
 import com.example.goodmarksman.objects.*;
-import com.google.gson.Gson;
-import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.scene.layout.Pane;
+import com.example.goodmarksman.objects.Action;
 
-import java.io.*;
-import java.net.Socket;
 import java.util.ArrayList;
 
 public class GameClient implements IObserver {
-    MsgAction gameState = MsgAction.GAME_STOPPED;
+    Action gameState = Action.GAME_STOPPED;
     ClientState clientState = ClientState.NOT_READY;
     public Thread messageListener;
 
@@ -54,7 +48,7 @@ public class GameClient implements IObserver {
 
                     }
                 }
-//                System.out.println("Message Listener out: " + MainClient.m.getDao().clientsData.getClientsData());
+//                System.out.println("Message Listener out: " + MainClient.m.getDao().clientsData.getArray());
             } catch (Exception e) {
                 System.err.println("Message Listener error: " + e.getMessage());
                 return;

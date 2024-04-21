@@ -2,7 +2,7 @@ package com.example.goodmarksman;
 
 import com.example.goodmarksman.models.GameModel;
 import com.example.goodmarksman.objects.Client;
-import com.example.goodmarksman.objects.MsgAction;
+import com.example.goodmarksman.objects.Action;
 
 import java.io.*;
 import java.net.InetAddress;
@@ -52,15 +52,15 @@ public class MainServer {
     private static Client getClient(Socket cs) {
         Client cl = new Client(cs);
         try {
-            cl.sendMsg(new Msg("", MsgAction.CLIENT_CONNECTED));
+            cl.sendMsg(new Msg("", Action.CLIENT_CONNECTED));
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
         cl.setIObserver((model) -> {
             try {
-                Msg message = new Msg(m.getPlayersData(), MsgAction.UPDATE_GAME_STATE);
-//                System.out.println("Server Observer: " + message);
+                Msg message = new Msg(m.getPlayersData(), Action.UPDATE_GAME_STATE);
+                System.out.println("Server Observer: " + m.getPlayersData());
                 cl.sendMsg(message);
             } catch (IOException e) {
                 System.err.println("Event error: " + e.getMessage());

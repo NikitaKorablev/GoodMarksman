@@ -22,8 +22,8 @@ import java.util.function.Consumer;
 // и хранение игровых объектов
 public class DAO implements Iterable<Score> {
     private Pane gameView;
-    private Circle smallTarget;
-    private Circle bigTarget;
+    private Circle smallTarget = null;
+    private Circle bigTarget = null;
     private Polygon arrow;
 
     private final ArrayList<Polygon> arrows = new ArrayList<>();
@@ -49,7 +49,7 @@ public class DAO implements Iterable<Score> {
                 arrow, score).setPlayerName(cl.getName());
     }
 
-    public ClientsDataArray getClientsData() { return this.clientsData; }
+//    public ClientsDataArray getArray() { return this.clientsData; }
 
     public void sendMsg(Msg msg) throws IOException {
         if (msg.portOwner == -1) throw new IOException("Port owner not set.");
@@ -79,11 +79,11 @@ public class DAO implements Iterable<Score> {
         return clientsData.getData(port);
     }
 
-    public ClientsDataArray getPlayersData() {
+    public ClientsDataArray getClientsData() {
         return clientsData;
     }
 
-    public void setClientsData(ArrayList<ClientData> clientsData) {
+    public void setClientsData(ClientsDataArray clientsData) {
         this.clientsData.setClientsData(clientsData);
     }
 
@@ -98,6 +98,14 @@ public class DAO implements Iterable<Score> {
 
     public Polygon getArrow() { return arrow; }
     public void setArrow(Polygon arrow) { this.arrow = arrow; }
+
+    public ArrayList<Polygon> getArrows() {
+        ArrayList<Polygon> a = new ArrayList<>();
+        if (arrow != null) a.add(this.arrow);
+        if (!arrows.isEmpty()) a.addAll(getArrows());
+
+        return a;
+    }
 
     public ArrayList<Text> getScoreList() { return scoreList; }
     public void setScoreList(ArrayList<Text> scoreList) { this.scoreList = scoreList; }
@@ -120,6 +128,38 @@ public class DAO implements Iterable<Score> {
         }
 
         return null;
+    }
+
+//    public void moveArrow(Arrow arrow) {
+//        double newX = arrow.getX() + arrow.getSpeed();
+//        arrow.setX(newX);
+//
+//    }
+
+    public void updateTargets(ArrayList<Target> targets) {
+        Platform.runLater(() -> {
+            Target target1 = targets.get(0);
+            Target target2 = targets.get(1);
+            if (target1.getRadius() > target2.getRadius()) {
+                Target tmp = target1;
+                target1 = target2;
+                target2 = tmp;
+            }
+
+            if (smallTarget == null || bigTarget == null) {
+                smallTarget = target1.getCircle();
+                bigTarget = target2.getCircle();
+
+                gameView.getChildren().add(smallTarget);
+                gameView.getChildren().add(bigTarget);
+            } else {
+                smallTarget.setLayoutY(target1.getY());
+                smallTarget.setFill(target1.getCurrentColor().getValue());
+
+                bigTarget.setLayoutY(target2.getY());
+                bigTarget.setFill(target2.getCurrentColor().getValue());
+            }
+        });
     }
 
     public void updateArrow(Arrow arrow) {

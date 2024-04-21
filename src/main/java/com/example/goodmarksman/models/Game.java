@@ -20,8 +20,8 @@ public class Game {
 
     public Game(Circle target1, Circle target2, Polygon arrow) {
 //        this.view = view;
-        this.target1 = new Target(target1, COLORS.BLUE, -1, 1, 1);
-        this.target2 = new Target(target2, COLORS.RED, 1, 2, 2);
+//        this.target1 = new Target(target1, COLORS.BLUE, -1, 1, 1);
+//        this.target2 = new Target(target2, COLORS.RED, 1, 2, 2);
 //        this.arrow = new Arrow(arrow);
     }
 
@@ -92,14 +92,7 @@ public class Game {
                     }
                 }
 
-
-//                this.view.move(target1);
-//                this.view.move(target2);
-
-                if (arrow.getIsShooting()) {
-//                    this.view.move(arrow);
-//                    this.eventCheck(this.view);
-                }
+                if (arrow.getIsShooting()) {}
 
                 try {
                     Thread.sleep(10);

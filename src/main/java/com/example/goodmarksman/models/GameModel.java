@@ -32,7 +32,7 @@ public class GameModel {
 //    }
 
     public void event() {
-        System.out.println("Allo size: " + allO.size());
+//        System.out.println("Allo size: " + allO.size());
         for (IObserver o: allO) {
             o.event(this);
         }
@@ -62,7 +62,7 @@ public class GameModel {
     }
 
     public ClientData getClientData(Socket s) { return dao.getClientData(s.getPort()); }
-    public void setClientsData(ArrayList<ClientData> clientsData) {
+    public void setClientsData(ClientsDataArray clientsData) {
         dao.setClientsData(clientsData);
     }
 
@@ -70,7 +70,7 @@ public class GameModel {
         dao.setClientName(s, name);
     }
 
-    public ArrayList<ClientData> getPlayersData() { return dao.getPlayersData().getClientsData(); }
+    public ClientsDataArray getPlayersData() { return dao.getClientsData(); }
 
     public Client getClient(int port) {
         if (port == -1) {
@@ -84,9 +84,8 @@ public class GameModel {
     public void removePlayer(Client cl) { dao.removeClient(cl); }
 
     public void updateState() {
-        System.out.println("update state out: " + dao.getPlayersData().getClientsData());
-        if (dao.getPlayersData().getClientsData().isEmpty()) return;
-        System.out.println("update state out: " + dao.getPlayersData().getClientsData());
+        if (dao.getClientsData().getArray().isEmpty()) return;
+        System.out.println("update state out: " + dao.getClientsData());
         event();
     }
 }

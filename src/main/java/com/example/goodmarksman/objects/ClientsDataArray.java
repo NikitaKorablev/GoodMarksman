@@ -1,11 +1,10 @@
 package com.example.goodmarksman.objects;
 
-import javafx.scene.shape.Polygon;
-
 import java.util.ArrayList;
 
 public class ClientsDataArray {
     private ArrayList<ClientData> clientsData = new ArrayList<>();
+    private ArrayList<Target> targets = new ArrayList<>();
     private final ArrayList<COLORS> freeColors = new ArrayList<>();
     private final ArrayList<COLORS> busyColors = new ArrayList<>();
 
@@ -14,19 +13,61 @@ public class ClientsDataArray {
         freeColors.add(COLORS.ORANGE);
         freeColors.add(COLORS.BLACK);
         freeColors.add(COLORS.PURPLE);
+
+        targets.add(new Target(COLORS.RED, 350, 120, 10, -1, 1, 1));
+        targets.add(new Target(COLORS.BLUE, 292, 120, 17, 1, 2, 2));
     }
     public ClientsDataArray(ClientData data) {
         clientsData.add(data);
+
+        freeColors.add(COLORS.DARK_BLUE);
+        freeColors.add(COLORS.ORANGE);
+        freeColors.add(COLORS.BLACK);
+        freeColors.add(COLORS.PURPLE);
+
+        targets.add(new Target(COLORS.BLUE, 350, 120, 10, -1, 1, 1));
+        targets.add(new Target(COLORS.RED, 292, 120, 17, 1, 2, 2));
     }
     public ClientsDataArray(String playerName, int socketPort, Arrow arrow, Score score) {
         clientsData.add(new ClientData(playerName, socketPort, arrow, score));
+
+        freeColors.add(COLORS.DARK_BLUE);
+        freeColors.add(COLORS.ORANGE);
+        freeColors.add(COLORS.BLACK);
+        freeColors.add(COLORS.PURPLE);
+
+        targets.add(new Target(COLORS.BLUE, 350, 120, 10, -1, 1, 1));
+        targets.add(new Target(COLORS.RED, 292, 120, 17, 1, 2, 2));
     }
     public ClientsDataArray(ArrayList<ClientData> data) {
         clientsData.addAll(data);
+
+        freeColors.add(COLORS.DARK_BLUE);
+        freeColors.add(COLORS.ORANGE);
+        freeColors.add(COLORS.BLACK);
+        freeColors.add(COLORS.PURPLE);
+
+        targets.add(new Target(COLORS.BLUE, 350, 120, 10, -1, 1, 1));
+        targets.add(new Target(COLORS.RED, 292, 120, 17, 1, 2, 2));
+    }
+
+    public void updateScore(int port, int value) {
+//        if (value == 0) getData(port).getScore().shotCountInc();
+        getData(port).getScore().scoreInc(value);
     }
 
     public void clearAllData() {
         clientsData.clear();
+    }
+
+    public ArrayList<Arrow> getArrows() {
+        ArrayList<Arrow> arrows = new ArrayList<>();
+
+        for (ClientData clientData : clientsData) {
+            arrows.add(clientData.getArrow());
+        }
+
+        return arrows;
     }
 
     public void updateArrow(Arrow arrow) {
@@ -37,7 +78,11 @@ public class ClientsDataArray {
         }
     }
 
-//    public void add(Data data) { clientsData.add(data); }
+    public ArrayList<Target> getTargets() {
+        return targets;
+    }
+
+    //    public void add(Data data) { clientsData.add(data); }
     public ClientData add(String playerName, int socketPort, Arrow arrow, Score score) {
         arrow.setColor(freeColors.get(0));
         busyColors.add(freeColors.get(0));
@@ -51,7 +96,7 @@ public class ClientsDataArray {
 
     public ClientData getData(int socketPort) {
         System.err.println(socketPort);
-        System.err.println(clientsData);
+        System.err.println("Get data: " + clientsData);
         for (ClientData data : clientsData) {
             if (data.getPlayerPort() == socketPort) {
                 return data;
@@ -84,11 +129,14 @@ public class ClientsDataArray {
         }
     }
 
-    public ArrayList<ClientData> getClientsData() { return clientsData; }
-    public void setClientsData(ArrayList<ClientData> clientsData) {
-        System.out.println("ClientsData: " + clientsData);
+    public ArrayList<ClientData> getArray() { return clientsData; }
+    public void setClientsData(ClientsDataArray clientsData) {
+        System.out.println("ClientsData: " + clientsData.getArray());
         this.clientsData.clear();
-        this.clientsData = clientsData;
+        this.targets.clear();
+
+        this.clientsData = clientsData.getArray();
+        this.targets = clientsData.getTargets();
     }
 
     public void setClientName(int port, String name) {
@@ -97,8 +145,9 @@ public class ClientsDataArray {
 
     @Override
     public String toString() {
-        return "ClientsData{" +
+        return "ClientsDataArray{" +
                 "clientsData=" + clientsData +
+                ", targets=" + targets +
                 ", freeColors=" + freeColors +
                 ", busyColors=" + busyColors +
                 '}';

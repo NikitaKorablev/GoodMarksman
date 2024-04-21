@@ -3,6 +3,7 @@ package com.example.goodmarksman;
 //import com.example.goodmarksman.models.Game;
 import com.example.goodmarksman.models.GameModel;
 import com.example.goodmarksman.objects.*;
+import com.example.goodmarksman.objects.Action;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -34,10 +35,10 @@ public class MainController implements IObserver {
     private Pane gameView;
 //    @FXML
 //    VBox scoreBord;
-    @FXML
-    private Circle bigTarget;
-    @FXML
-    private Circle smallTarget;
+//    @FXML
+//    private Circle bigTarget;
+//    @FXML
+//    private Circle smallTarget;
     @FXML
     private Polygon arrow;
     @FXML
@@ -102,26 +103,28 @@ public class MainController implements IObserver {
                 MainClient.m.getDao().setScoreList(scoreList);
                 MainClient.m.getDao().setShotsList(shotsList);
                 MainClient.m.getDao().setStatisticBoxes(statisticBoxes);
-                MainClient.m.getDao().setSmallTarget(smallTarget);
-                MainClient.m.getDao().setBigTarget(bigTarget);
+//                MainClient.m.getDao().setSmallTarget(smallTarget);
+//                MainClient.m.getDao().setBigTarget(bigTarget);
                 MainClient.m.getDao().setArrow(arrow);
             }
 
-            MainClient.m.addObserver((model) -> {
-                System.out.println("test");
-                System.out.println("Event out: " + MainClient.m.getDao().getPlayersData().getClientsData());
-                ArrayList<ClientData> dataArray = MainClient.m.getDao().getPlayersData().getClientsData();
 
-                synchronized (MainClient.m) {
-                    for (ClientData data: dataArray) {
+
+            MainClient.m.addObserver((model) -> {
+//                System.out.println("test");
+                System.out.println("Event out: " + MainClient.m.getDao().getClientsData().getArray());
+                ClientsDataArray dataObj = MainClient.m.getDao().getClientsData();
+
+                synchronized (Thread.currentThread()) {
+                    MainClient.m.getDao().updateTargets(dataObj.getTargets());
+
+                    for (ClientData data: dataObj.getArray()) {
                         System.err.println("Player port: " + data.getPlayerPort());
                         MainClient.m.getDao().updateArrow(data.getArrow());
                         MainClient.m.getDao().updateScore(data.getScore(), data.getArrow().getColorName());
                     }
 
-                    //            MainClient.m.updateTargets(MainClient.m.getDao().getTargetsState());
-
-                    MainClient.m.getDao().getPlayersData().clearAllData();
+                    MainClient.m.getDao().getClientsData().clearAllData();
                 }
             });
         }
@@ -145,7 +148,7 @@ public class MainController implements IObserver {
             MainClient.game = new GameClient(MainClient.server);
 
             // TODO: отправка имени игрока на сервер
-            MainClient.server.sendMsg(new Msg(MainClient.playerName, MsgAction.SET_NAME));
+            MainClient.server.sendMsg(new Msg(MainClient.playerName, Action.SET_NAME));
             // TODO: проверка имени на идентичнсть
 
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("game-view.fxml"));
@@ -172,8 +175,10 @@ public class MainController implements IObserver {
 
         if (MainClient.game.clientState == ClientState.NOT_READY) {
             try {
+                MainClient.server.sendMsg(new Msg((int) gameView.getHeight(), Action.WIDTH_INIT));
+
                 MainClient.game.clientState = ClientState.READY;
-                MainClient.server.sendMsg(new Msg(MainClient.game.clientState, MsgAction.CLIENT_STATE));
+                MainClient.server.sendMsg(new Msg(MainClient.game.clientState, Action.CLIENT_STATE));
             } catch (Exception e) {
                 new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
             }
@@ -212,21 +217,11 @@ public class MainController implements IObserver {
         try {
             MainClient.server.sendMsg(new Msg(
                     new Arrow(arrow, MainClient.server.getSocket().getLocalPort()),
-                    MsgAction.UPDATE_GAME_STATE));
+                    Action.UPDATE_GAME_STATE));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-        // TODO: Отправить на сервер новые координаты стрелы
     }
-
-//    @FXML
-//    void mouseEvent(MouseEvent event) {
-//        if (game == null) return;
-//        ArrayList<Point> allP = new ArrayList<>();
-//        allP.add(new Point((int)event.getX(), (int)event.getY()));
-//        game.sendMsg(new Msg(allP, MsgAction.ADD));
-//    }
 
     @Override
     public void event(GameModel m) {}

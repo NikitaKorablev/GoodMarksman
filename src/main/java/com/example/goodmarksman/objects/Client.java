@@ -96,11 +96,11 @@ public class Client {
         }
     }
 
-    public void sendState(ArrayList<ClientData> data) {
+    public void sendState(ClientsDataArray data) {
         try {
 //            System.out.println(cl.getSocket().getPort());
 
-            Msg message = new Msg(data, MsgAction.UPDATE_GAME_STATE);
+            Msg message = new Msg(data, Action.UPDATE_GAME_STATE);
             sendMsg(message);
         } catch (IOException e) {
             System.err.println("Error of send data: " + e.getMessage());

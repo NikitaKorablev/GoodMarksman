@@ -2,6 +2,7 @@ package com.example.goodmarksman;
 
 import com.example.goodmarksman.models.GameModel;
 import com.example.goodmarksman.objects.*;
+import com.example.goodmarksman.objects.Action;
 import com.google.gson.Gson;
 
 import java.io.*;
@@ -14,7 +15,7 @@ public class GameServer implements IObserver {
     private final ArrayList<Thread> messageListeners = new ArrayList<>();
     private Thread gameThread = null;
 
-    MsgAction gameState = MsgAction.GAME_STOPPED;
+    Action gameState = Action.GAME_STOPPED;
     boolean isPaused = false;
     Thread sendState = null;
 
@@ -42,7 +43,7 @@ public class GameServer implements IObserver {
         if (MainServer.m.playersSize() >= 4) {
             try {
                 cl.sendMsg(new Msg("Too many players connected to the server",
-                        MsgAction.CONNECTION_ERROR)
+                        Action.CONNECTION_ERROR)
                 );
             } catch (IOException e) {
                 System.err.println("Add player Error: " + e.getMessage());
@@ -63,7 +64,6 @@ public class GameServer implements IObserver {
 //        thread.start();
 //        messageListeners.add(thread);
         System.out.println("new players count " + MainServer.m.playersSize());
-//        cl.sendState(MainServer.m.getPlayersData());
     }
 
     void messageListener(Client cl) {
@@ -79,9 +79,18 @@ public class GameServer implements IObserver {
                         case CONNECTION_ERROR:
                             throw new Exception(msg.message);
                         case CLIENT_STATE:
+                            System.out.println(msg.clientState);
+
                             if (msg.clientState == ClientState.READY) {
+                                // Проверка на уже запущенную игру
+                                if (!checkState()) break;
+
                                 this.countReadyPlayers++;
-                                if (countReadyPlayers == 4) gameThread.start();
+                                //TODO: готово не больше 4 игроков
+//                                if (countReadyPlayers == 4) gameThread.start();
+                                gameState = Action.GAME_STARTED;
+//                                System.out.println(gameThread);
+                                gameThread.start();
                             }
                             else if (msg.clientState == ClientState.NOT_READY)
                                 this.countReadyPlayers--;
@@ -105,6 +114,11 @@ public class GameServer implements IObserver {
                                 MainServer.m.event();
                             }
                             break;
+                        case WIDTH_INIT:
+                            for (Target t: MainServer.m.getDao().getClientsData().getTargets()) {
+                                t.setUpperThreshold(msg.int_message);
+                            }
+                            break;
                         default:
                             System.out.println("Get message: " + msg.action);
                             break;
@@ -117,12 +131,14 @@ public class GameServer implements IObserver {
                 cl.getSocket().close();
                 System.err.println("Client " + cl.getSocket().getPort() + " closed.");
                 System.err.println("GameServer: " + e.getMessage());
+                gameState = Action.GAME_STOPPED;
+                gameThread.interrupt();
                 synchronized (this) {
                     messageListeners.remove(MainServer.m.getPlayerIndex(cl.getSocket()));
                     MainServer.m.removePlayer(cl);
                     MainServer.m.removeObserver(cl.getIObserver());
 //                        m.
-//                        System.out.println(m.getPlayersData());
+//                        System.out.println(m.getArray());
                 }
             } catch (Exception err) {
                 System.err.println(err.getMessage());
@@ -130,17 +146,106 @@ public class GameServer implements IObserver {
             }
 
             System.err.println("Remove is called");
-            return;
         }
-
-
     }
 
     //TODO: Запуск цикла среверной части
     void run() {
-        while (true) {
+        // TODO: Переезд в слушатель
+        //  if (checkState()) return;
+        System.out.println("Game started!!!");
 
+        while (this.gameState == Action.GAME_STARTED) {
+            if (isPaused) {
+                try {
+                    synchronized (Thread.currentThread()) {
+                        try {
+                            gameThread.wait();
+                        } catch (InterruptedException e) {
+                            System.err.println(e.getMessage());
+                            this.stopGame();
+                        }
+                    }
+                } catch (Exception e) {
+                    System.err.println(e.getMessage());
+                    this.stopGame();
+                }
+            }
+
+            ArrayList<Arrow> arrows = MainServer.m.getDao().getClientsData().getArrows();
+            ArrayList<Target> targets = MainServer.m.getDao().getClientsData().getTargets();
+
+            synchronized (Thread.currentThread()) {
+                for (Target t: targets) {
+                    System.out.println(t.getY());
+                    try {
+                        t.move();
+                    } catch (Exception e) {
+                        System.err.println(e.getMessage());
+                    }
+                    System.out.println(t.getY());
+                }
+
+                for (Arrow a: arrows) {
+                    if (a.getIsShooting()) {
+                        a.setX(a.getX() + a.getSpeed());
+                        checkIsHit(a, targets);
+                    }
+                }
+            }
+
+            MainServer.m.event();
+
+            try {
+                Thread.sleep(10);
+            } catch(InterruptedException err) {
+                System.err.println(err.getMessage());
+            }
         }
+    }
+
+    public void stopGame() {
+        this.gameState = Action.GAME_STOPPED;
+        gameThread.interrupt();
+        gameThread = null;
+
+//        this.view.setStartPositions(target1, target2, arrow);
+    }
+
+    private void checkIsHit(Arrow arrow, ArrayList<Target> targets) {
+        if (arrow.getX() >= arrow.getMaxX()) {
+            arrow.setIsShooting(false);
+            arrow.setX(arrow.getMinX());
+            return;
+        }
+
+        for (Target t: targets) {
+            if (arrow.getX() >= t.getX() - t.getRadius() &&
+                    arrow.getX() <= t.getX() &&
+                    t.isHitted(arrow.getX(), arrow.getY())) {
+                arrow.hit();
+                t.hit();
+                MainServer.m.getDao().getClientsData().updateScore(arrow.getOwnerPort(), t.getWeight());
+            }
+        }
+    }
+
+    private boolean checkState() {
+        if (gameThread != null) {
+            if (this.isPaused) {
+                try {
+                    synchronized (Thread.currentThread()) {
+                        this.isPaused = false;
+                        gameThread.notify();
+                    }
+                } catch (Exception e) {
+                    System.err.println(e.getMessage());
+                }
+            }
+            return true;
+        }
+
+        return false;
     }
 
     public Client getLastClient() {
