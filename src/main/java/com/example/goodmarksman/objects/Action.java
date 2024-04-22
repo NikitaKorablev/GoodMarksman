@@ -10,5 +10,6 @@ public enum Action {
     CLIENT_STATE,
     UPDATE_GAME_STATE,
     SET_NAME,
-    WIDTH_INIT
+    WIDTH_INIT,
+    SHOT
 }

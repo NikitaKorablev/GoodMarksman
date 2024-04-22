@@ -10,7 +10,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class MainServer {
-    public static final GameModel m = Models.buildGM();
+    public static final GameModel model = Models.buildGM();
 
     int port = 3000;
     InetAddress ip = null;
@@ -40,7 +40,7 @@ public class MainServer {
                         game.addListener(cl).start();
                     }
 
-                    m.addObserver(cl.getIObserver());
+                    model.addObserver(cl.getIObserver());
                 }
             }
 
@@ -59,8 +59,8 @@ public class MainServer {
 
         cl.setIObserver((model) -> {
             try {
-                Msg message = new Msg(m.getPlayersData(), Action.UPDATE_GAME_STATE);
-                System.out.println("Server Observer: " + m.getPlayersData());
+                Msg message = new Msg(MainServer.model.getPlayersData(), Action.UPDATE_GAME_STATE);
+                System.out.println("Server Observer: " + MainServer.model.getPlayersData());
                 cl.sendMsg(message);
             } catch (IOException e) {
                 System.err.println("Event error: " + e.getMessage());

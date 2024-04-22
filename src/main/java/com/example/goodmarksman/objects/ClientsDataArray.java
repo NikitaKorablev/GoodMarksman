@@ -14,8 +14,8 @@ public class ClientsDataArray {
         freeColors.add(COLORS.BLACK);
         freeColors.add(COLORS.PURPLE);
 
-        targets.add(new Target(COLORS.RED, 350, 120, 10, -1, 1, 1));
-        targets.add(new Target(COLORS.BLUE, 292, 120, 17, 1, 2, 2));
+        targets.add(new Target(COLORS.RED, 350, 120, 10, -1, 2, 1));
+        targets.add(new Target(COLORS.BLUE, 292, 120, 17, 1, 1, 2));
     }
     public ClientsDataArray(ClientData data) {
         clientsData.add(data);
@@ -68,6 +68,18 @@ public class ClientsDataArray {
         }
 
         return arrows;
+    }
+
+    public void arrowShot(int port) {
+        for (ClientData data : clientsData) {
+            if (data.getPlayerPort() == port) {
+                data.getArrow().setIsShooting(true);
+                data.getScore().shotCountInc();
+            }
+        }
+
+//        getData(port).getArrow().setIsShooting(true);
+        System.err.println("Test arrow set is shot: " + getData(port).getArrow());
     }
 
     public void updateArrow(Arrow arrow) {

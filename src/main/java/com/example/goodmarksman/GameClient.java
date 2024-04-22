@@ -48,7 +48,7 @@ public class GameClient implements IObserver {
 
                     }
                 }
-//                System.out.println("Message Listener out: " + MainClient.m.getDao().clientsData.getArray());
+//                System.out.println("Message Listener out: " + MainClient.model.getDao().clientsData.getArray());
             } catch (Exception e) {
                 System.err.println("Message Listener error: " + e.getMessage());
                 return;
@@ -65,7 +65,7 @@ public class GameClient implements IObserver {
     void run() {
 //        while (true) {
 //            Resp r = readResp();
-//            m.set(r.getPoints());
+//            model.set(r.getPoints());
 //        }
     }
 

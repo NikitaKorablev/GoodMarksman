@@ -9,7 +9,7 @@ import java.io.*;
 import java.util.ArrayList;
 
 public class GameServer implements IObserver {
-//    GameModel m = Models.buildGM();
+//    GameModel model = Models.buildGM();
     Gson gson = new Gson();
 
     private final ArrayList<Thread> messageListeners = new ArrayList<>();
@@ -39,8 +39,8 @@ public class GameServer implements IObserver {
     }
 
     public void addPlayer(Client cl) {
-        System.out.println("players count " + MainServer.m.playersSize());
-        if (MainServer.m.playersSize() >= 4) {
+        System.out.println("players count " + MainServer.model.playersSize());
+        if (MainServer.model.playersSize() >= 4) {
             try {
                 cl.sendMsg(new Msg("Too many players connected to the server",
                         Action.CONNECTION_ERROR)
@@ -54,7 +54,7 @@ public class GameServer implements IObserver {
         }
 
         try {
-            MainServer.m.addClient(cl, new Arrow(cl.getSocket().getPort()), new Score(cl.getSocket().getPort()));
+            MainServer.model.addClient(cl, new Arrow(cl.getSocket().getPort()), new Score(cl.getSocket().getPort()));
         } catch (Exception e) {
             System.err.println("Error in addPlayer() in GameServer: " + e.getMessage());
             throw new RuntimeException(e);
@@ -63,7 +63,7 @@ public class GameServer implements IObserver {
 //        thread.setDaemon(true);
 //        thread.start();
 //        messageListeners.add(thread);
-        System.out.println("new players count " + MainServer.m.playersSize());
+        System.out.println("new players count " + MainServer.model.playersSize());
     }
 
     void messageListener(Client cl) {
@@ -96,7 +96,7 @@ public class GameServer implements IObserver {
                                 this.countReadyPlayers--;
                             break;
                         case SET_NAME:
-//                            MainServer.m.getDao().setClientName(cl.getSocket(), msg.message);
+//                            MainServer.model.getDao().setClientName(cl.getSocket(), msg.message);
                             cl.setName(msg.message);
                             addPlayer(cl);
 //                            cl.sendMsg(new Msg("", MsgAction.CLIENT_CONNECTED));
@@ -110,13 +110,20 @@ public class GameServer implements IObserver {
                             break;
                         case UPDATE_GAME_STATE:
                             if (msg.arrow != null) {
-                                MainServer.m.getDao().getClientsData().updateArrow(msg.arrow);
-                                MainServer.m.event();
+                                MainServer.model.getDao().getClientsData().updateArrow(msg.arrow);
+                                MainServer.model.event();
                             }
                             break;
+                        case SHOT:
+//                            System.err.println("SHOT " + msg.message);
+                            MainServer.model.getDao().getClientsData().arrowShot(cl.getSocket().getPort());
+                            break;
                         case WIDTH_INIT:
-                            for (Target t: MainServer.m.getDao().getClientsData().getTargets()) {
-                                t.setUpperThreshold(msg.int_message);
+                            for (Arrow a: MainServer.model.getDao().getClientsData().getArrows()) {
+                                a.setMaxX(msg.view_width);
+                            }
+                            for (Target t: MainServer.model.getDao().getClientsData().getTargets()) {
+                                t.setUpperThreshold(msg.view_height);
                             }
                             break;
                         default:
@@ -134,11 +141,11 @@ public class GameServer implements IObserver {
                 gameState = Action.GAME_STOPPED;
                 gameThread.interrupt();
                 synchronized (this) {
-                    messageListeners.remove(MainServer.m.getPlayerIndex(cl.getSocket()));
-                    MainServer.m.removePlayer(cl);
-                    MainServer.m.removeObserver(cl.getIObserver());
-//                        m.
-//                        System.out.println(m.getArray());
+                    messageListeners.remove(MainServer.model.getPlayerIndex(cl.getSocket()));
+                    MainServer.model.removePlayer(cl);
+                    MainServer.model.removeObserver(cl.getIObserver());
+//                        model.
+//                        System.out.println(model.getArray());
                 }
             } catch (Exception err) {
                 System.err.println(err.getMessage());
@@ -172,8 +179,8 @@ public class GameServer implements IObserver {
                 }
             }
 
-            ArrayList<Arrow> arrows = MainServer.m.getDao().getClientsData().getArrows();
-            ArrayList<Target> targets = MainServer.m.getDao().getClientsData().getTargets();
+            ArrayList<Arrow> arrows = MainServer.model.getDao().getClientsData().getArrows();
+            ArrayList<Target> targets = MainServer.model.getDao().getClientsData().getTargets();
 
             synchronized (Thread.currentThread()) {
                 for (Target t: targets) {
@@ -194,7 +201,7 @@ public class GameServer implements IObserver {
                 }
             }
 
-            MainServer.m.event();
+            MainServer.model.event();
 
             try {
                 Thread.sleep(10);
@@ -213,6 +220,7 @@ public class GameServer implements IObserver {
     }
 
     private void checkIsHit(Arrow arrow, ArrayList<Target> targets) {
+        System.out.println("checker: " + arrow);
         if (arrow.getX() >= arrow.getMaxX()) {
             arrow.setIsShooting(false);
             arrow.setX(arrow.getMinX());
@@ -225,7 +233,7 @@ public class GameServer implements IObserver {
                     t.isHitted(arrow.getX(), arrow.getY())) {
                 arrow.hit();
                 t.hit();
-                MainServer.m.getDao().getClientsData().updateScore(arrow.getOwnerPort(), t.getWeight());
+                MainServer.model.getDao().getClientsData().updateScore(arrow.getOwnerPort(), t.getWeight());
             }
         }
     }
@@ -249,7 +257,7 @@ public class GameServer implements IObserver {
     }
 
     public Client getLastClient() {
-        return MainServer.m.getClient(-1);
+        return MainServer.model.getClient(-1);
     }
 
     @Override

@@ -103,8 +103,8 @@ public class MainController implements IObserver {
                 MainClient.m.getDao().setScoreList(scoreList);
                 MainClient.m.getDao().setShotsList(shotsList);
                 MainClient.m.getDao().setStatisticBoxes(statisticBoxes);
-//                MainClient.m.getDao().setSmallTarget(smallTarget);
-//                MainClient.m.getDao().setBigTarget(bigTarget);
+//                MainClient.model.getDao().setSmallTarget(smallTarget);
+//                MainClient.model.getDao().setBigTarget(bigTarget);
                 MainClient.m.getDao().setArrow(arrow);
             }
 
@@ -175,7 +175,9 @@ public class MainController implements IObserver {
 
         if (MainClient.game.clientState == ClientState.NOT_READY) {
             try {
-                MainClient.server.sendMsg(new Msg((int) gameView.getHeight(), Action.WIDTH_INIT));
+                MainClient.server.sendMsg(new Msg(
+                        new int[]{(int) gameView.getWidth(), (int) gameView.getHeight()},
+                        Action.WIDTH_INIT));
 
                 MainClient.game.clientState = ClientState.READY;
                 MainClient.server.sendMsg(new Msg(MainClient.game.clientState, Action.CLIENT_STATE));
@@ -189,24 +191,35 @@ public class MainController implements IObserver {
     @FXML
     protected void onStopButtonClick() {
         if (gameView == null) return;
-//        if (game.state == Game.GameState.STOPPED) return;
 
-//        game.stopGame();
+        try {
+            MainClient.server.sendMsg(new Msg("", Action.GAME_STOPPED));
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
     @FXML
     protected void onShotButtonClick() {
         if (gameView == null) return;
-//        if (gameView == null || game.state == Game.GameState.STOPPED) return;
-//        game.shot();
+
+        try {
+            MainClient.server.sendMsg(new Msg("", Action.SHOT));
+        } catch (IOException e) {
+            System.err.println(e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
     @FXML
     protected void onPauseButtonClick() {
         if (gameView == null) return;
-//        try {
-//            game.setPaused();
-//        } catch (InterruptedException e) {
-//            System.err.println(e);
-//        }
+
+        try {
+            MainClient.server.sendMsg(new Msg("", Action.GAME_PAUSED));
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+            throw new RuntimeException(e);
+        }
     }
 
     // Перемещение стрелы в место нажатия

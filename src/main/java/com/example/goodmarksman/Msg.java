@@ -16,7 +16,8 @@ public class Msg {
 //    ClientsData clientsData = null;
     ClientsDataArray clientsData = null;
     String message = null;
-    int int_message;
+    int view_width;
+    int view_height;
     int portOwner = -1;
 
 //    public Msg(ArrayList<Score> scoreBoard, MsgAction action) {
@@ -33,9 +34,10 @@ public class Msg {
         this.message = message;
     }
 
-    public Msg(int int_message, Action action) {
+    public Msg(int[] wh, Action action) {
         this.action = action;
-        this.int_message = int_message;
+        this.view_width = wh[0];
+        this.view_height = wh[1];
     }
 
     public Msg(ClientState state, Action action) {
@@ -83,7 +85,8 @@ public class Msg {
                 ", arrow=" + arrow +
                 ", clientsData=" + clientsData +
                 ", message='" + message + '\'' +
-                ", int_message=" + int_message +
+                ", view_width=" + view_width +
+                ", view_height=" + view_height +
                 ", portOwner=" + portOwner +
                 '}';
     }
