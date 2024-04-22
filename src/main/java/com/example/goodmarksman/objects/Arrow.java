@@ -13,7 +13,8 @@ public class Arrow {
     private boolean isShooting = false;
     private final int min_x = 38;
     private int max_x = -1;
-    private int layoutX = min_x, layoutY = 122;
+    private int startY = 122;
+    private int layoutX = min_x, layoutY = startY;
     private COLORS colorName = COLORS.NULL;
 
     public Arrow(Polygon arrow, int ownerPort) {
@@ -34,6 +35,11 @@ public class Arrow {
         this.layoutX = a.layoutX;
         this.layoutY = a.layoutY;
         this.isShooting = a.isShooting;
+    }
+
+    public void nullify() {
+        setX(min_x);
+        setY(startY);
     }
 
     public void setColor(COLORS color) {

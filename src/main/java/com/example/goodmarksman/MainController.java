@@ -173,26 +173,41 @@ public class MainController implements IObserver {
             return;
         }
 
-        if (MainClient.game.clientState == ClientState.NOT_READY) {
+        if (MainClient.game.clientState == ClientState.NOT_READY &&
+            MainClient.game.gameState == Action.GAME_STARTED) {
+            MainClient.game.clientState = ClientState.READY;
+
+            try {
+                MainClient.server.sendMsg(new Msg(MainClient.game.clientState, Action.CLIENT_STATE));
+            } catch (IOException e) {
+                System.err.println(e.getMessage());
+                throw new RuntimeException(e);
+            }
+        }
+
+        if (MainClient.game.clientState == ClientState.NOT_READY &&
+            MainClient.game.gameState == Action.GAME_STOPPED) {
+            MainClient.game.clientState = ClientState.READY;
+            MainClient.game.gameState = Action.GAME_STARTED;
+
             try {
                 MainClient.server.sendMsg(new Msg(
                         new int[]{(int) gameView.getWidth(), (int) gameView.getHeight()},
                         Action.WIDTH_INIT));
 
-                MainClient.game.clientState = ClientState.READY;
                 MainClient.server.sendMsg(new Msg(MainClient.game.clientState, Action.CLIENT_STATE));
             } catch (Exception e) {
                 new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
             }
         }
-
-//        game.startGame();
     }
     @FXML
     protected void onStopButtonClick() {
-        if (gameView == null) return;
+        if (gameView == null || MainClient.game.gameState == Action.GAME_STOPPED) return;
 
         try {
+            MainClient.game.gameState = Action.GAME_STOPPED;
+            MainClient.game.clientState = ClientState.NOT_READY;
             MainClient.server.sendMsg(new Msg("", Action.GAME_STOPPED));
         } catch (IOException e) {
             System.err.println(e.getMessage());
@@ -201,7 +216,9 @@ public class MainController implements IObserver {
     }
     @FXML
     protected void onShotButtonClick() {
-        if (gameView == null) return;
+        if (gameView == null ||
+                MainClient.game.gameState == Action.GAME_STOPPED ||
+                MainClient.game.clientState == ClientState.NOT_READY) return;
 
         try {
             MainClient.server.sendMsg(new Msg("", Action.SHOT));
@@ -210,12 +227,16 @@ public class MainController implements IObserver {
             throw new RuntimeException(e);
         }
     }
+
     @FXML
     protected void onPauseButtonClick() {
-        if (gameView == null) return;
+        if (gameView == null ||
+                MainClient.game.clientState == ClientState.NOT_READY ||
+                MainClient.game.gameState == Action.GAME_STOPPED) return;
 
         try {
-            MainClient.server.sendMsg(new Msg("", Action.GAME_PAUSED));
+            MainClient.game.clientState = ClientState.NOT_READY;
+            MainClient.server.sendMsg(new Msg(ClientState.NOT_READY, Action.CLIENT_STATE));
         } catch (Exception e) {
             System.err.println(e.getMessage());
             throw new RuntimeException(e);

@@ -2,7 +2,6 @@ package com.example.goodmarksman.objects;
 
 public enum Action {
     GAME_STARTED,
-    GAME_PAUSED,
     GAME_STOPPED,
     CLIENT_CONNECTED,
     CONNECT,

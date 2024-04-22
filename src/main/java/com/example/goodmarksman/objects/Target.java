@@ -14,6 +14,7 @@ public class Target {
     private final int weight;
     private final int colorCoolDown = 20;
     private int radius = 0;
+    private int startY;
     private int X = 0;
     private int Y = 0;
 
@@ -39,6 +40,7 @@ public class Target {
 
         this.X = x;
         this.Y = y;
+        this.startY = y;
 
         this.curColor = color;
         this.baseColor = color;
@@ -50,6 +52,10 @@ public class Target {
 
     public void setUpperThreshold(int paneHeight) {
         this.upperThreshold = paneHeight;
+    }
+
+    public int getStartY() {
+        return startY;
     }
 
     public Circle getCircle() {

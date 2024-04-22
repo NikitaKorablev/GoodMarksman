@@ -32,6 +32,11 @@ public class Score {
         this.shotCountValue = s.shotCountValue;
     }
 
+    public void nullify() {
+        this.scoreValue = 0;
+        this.shotCountValue = 0;
+    }
+
     public int getScore() { return this.scoreValue; }
     public void setScore(int i) {
         this.scoreValue = i;

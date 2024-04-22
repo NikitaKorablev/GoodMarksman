@@ -26,8 +26,8 @@ public class GameServer implements IObserver {
 //        addPlayer(cl);
         addListener(cl).start();
 
-        gameThread = new Thread(this::run);
-        gameThread.setDaemon(true);
+//        gameThread = new Thread(this::run);
+//        gameThread.setDaemon(true);
 //        new Thread(this::run).start();
     }
 
@@ -81,19 +81,38 @@ public class GameServer implements IObserver {
                         case CLIENT_STATE:
                             System.out.println(msg.clientState);
 
-                            if (msg.clientState == ClientState.READY) {
+                            if (gameState == Action.GAME_STOPPED &&
+                                gameThread == null) {
+                                gameThread = new Thread(this::run);
+                                gameThread.setDaemon(true);
+                            }
+
+                            if (gameState == Action.GAME_STARTED &&
+                                    isPaused
+                                    && msg.clientState == ClientState.READY) {
+                                this.countReadyPlayers++;
+                                System.err.println(countReadyPlayers);
+                                if (this.countReadyPlayers == MainServer.model.playersSize()) isStarted();
+                                break;
+                            } else if (msg.clientState == ClientState.NOT_READY) {
+                                isPaused = true;
+                                this.countReadyPlayers--;
+                                System.err.println(countReadyPlayers);
+                            } else if (gameState == Action.GAME_STOPPED &&
+                                    msg.clientState == ClientState.READY) {
                                 // Проверка на уже запущенную игру
-                                if (!checkState()) break;
+                                if (isStarted()) break;
 
                                 this.countReadyPlayers++;
+                                System.err.println(countReadyPlayers);
                                 //TODO: готово не больше 4 игроков
-//                                if (countReadyPlayers == 4) gameThread.start();
-                                gameState = Action.GAME_STARTED;
-//                                System.out.println(gameThread);
-                                gameThread.start();
+                                if (this.countReadyPlayers == MainServer.model.playersSize()) {
+                                    isPaused = false;
+                                    gameState = Action.GAME_STARTED;
+                                    gameThread.start();
+                                }
                             }
-                            else if (msg.clientState == ClientState.NOT_READY)
-                                this.countReadyPlayers--;
+
                             break;
                         case SET_NAME:
 //                            MainServer.model.getDao().setClientName(cl.getSocket(), msg.message);
@@ -103,9 +122,10 @@ public class GameServer implements IObserver {
                             break;
                         case GAME_STOPPED:
                             if (gameThread != null && gameThread.isAlive()) {
-                                //TODO: Возможно надо wait()
-                                gameThread.interrupt();
+                                gameState = Action.GAME_STOPPED;
                                 gameThread = null;
+                                MainServer.model.getDao().getClientsData().nullify();
+                                MainServer.model.event();
                             }
                             break;
                         case UPDATE_GAME_STATE:
@@ -162,7 +182,7 @@ public class GameServer implements IObserver {
         //  if (checkState()) return;
         System.out.println("Game started!!!");
 
-        while (this.gameState == Action.GAME_STARTED) {
+        while (gameState == Action.GAME_STARTED) {
             if (isPaused) {
                 try {
                     synchronized (Thread.currentThread()) {
@@ -238,22 +258,23 @@ public class GameServer implements IObserver {
         }
     }
 
-    private boolean checkState() {
+    private boolean isStarted() throws Exception {
         if (gameThread != null) {
             if (this.isPaused) {
                 try {
-                    synchronized (Thread.currentThread()) {
+                    synchronized (this.gameThread) {
                         this.isPaused = false;
                         gameThread.notify();
                     }
                 } catch (Exception e) {
-                    System.err.println(e.getMessage());
+                    System.err.println("Is started method call exception: " + e.getMessage());
+                    throw new Exception(e);
                 }
             }
-            return true;
-        }
+            return false;
+        } else System.err.println("gameThread is null");
 
-        return false;
+        return true;
     }
 
     public Client getLastClient() {

@@ -56,6 +56,17 @@ public class ClientsDataArray {
         getData(port).getScore().scoreInc(value);
     }
 
+    public void nullify() {
+        for (Target t: targets) {
+            t.setY(t.getStartY());
+        }
+
+        for (ClientData c: clientsData) {
+            c.getArrow().nullify();
+            c.getScore().nullify();
+        }
+    }
+
     public void clearAllData() {
         clientsData.clear();
     }
