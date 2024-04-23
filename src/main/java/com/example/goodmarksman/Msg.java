@@ -15,6 +15,7 @@ public class Msg {
 //    ArrayList<Score> score = null;
 //    ClientsData clientsData = null;
     ClientsDataArray clientsData = null;
+    ClientData clientData = null;
     String message = null;
     int view_width;
     int view_height;
@@ -59,6 +60,17 @@ public class Msg {
 
     public Msg(ClientsDataArray dataArray, Action action) {
         this.clientsData = dataArray;
+        this.action = action;
+    }
+
+    public Msg(ClientData data, Action action) {
+        this.clientData = data;
+        this.action = action;
+    }
+
+    public Msg(String message, ClientState state, Action action) {
+        this.message = message;
+        this.clientState = state;
         this.action = action;
     }
 

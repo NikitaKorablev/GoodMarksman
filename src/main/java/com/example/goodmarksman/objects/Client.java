@@ -96,17 +96,17 @@ public class Client {
         }
     }
 
-    public void sendState(ClientsDataArray data) {
-        try {
-//            System.out.println(cl.getSocket().getPort());
-
-            Msg message = new Msg(data, Action.UPDATE_GAME_STATE);
-            sendMsg(message);
-        } catch (IOException e) {
-            System.err.println("Error of send data: " + e.getMessage());
-            throw new RuntimeException(e);
-        }
-    }
+//    public void sendState(ClientsDataArray data) {
+//        try {
+////            System.out.println(cl.getSocket().getPort());
+//
+//            Msg message = new Msg(data, Action.UPDATE_GAME_STATE);
+//            sendMsg(message);
+//        } catch (IOException e) {
+//            System.err.println("Error of send data: " + e.getMessage());
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     @Override
     public String toString() {

@@ -3,6 +3,8 @@ package com.example.goodmarksman;
 import com.example.goodmarksman.models.GameModel;
 import com.example.goodmarksman.objects.*;
 import com.example.goodmarksman.objects.Action;
+import javafx.application.Platform;
+import javafx.scene.control.Alert;
 
 import java.util.ArrayList;
 
@@ -32,7 +34,7 @@ public class GameClient implements IObserver {
 //            System.out.println("Message received");
             try {
                 Msg msg = server.readMsg();
-                synchronized (this) {
+                synchronized (Thread.currentThread()) {
                     switch (msg.getAction()) {
                         case CONNECTION_ERROR:
                             System.err.println(msg.message);
@@ -44,8 +46,23 @@ public class GameClient implements IObserver {
                             MainClient.m.getDao().setClientsData(msg.clientsData);
                             MainClient.m.updateState();
                             break;
-//                        case CLIENT_CONNECTED:
-
+                        case CLIENT_DISCONNECTED:
+                            Platform.runLater(() -> {
+                                try {
+                                    MainClient.m.getDao().deleteClient(msg.clientData);
+                                } catch (Exception e) {
+                                    System.err.println("Delete Client Error in GameClient: " + e.getMessage());
+                                    throw new RuntimeException(e);
+                                }
+                            });
+                            break;
+                        case CLIENT_STATE:
+                            System.out.println("Win event: " + msg);
+                            if (msg.clientState.equals(ClientState.WIN)) {
+                                Platform.runLater(() -> {
+                                    new Alert(Alert.AlertType.INFORMATION, msg.message).show();
+                                });
+                            }
                     }
                 }
 //                System.out.println("Message Listener out: " + MainClient.model.getDao().clientsData.getArray());
@@ -59,14 +76,6 @@ public class GameClient implements IObserver {
 
     public int getServerPort() {
         return server.getSocket().getLocalPort();
-    }
-
-    //TODO: Запуск цикла клиентской части
-    void run() {
-//        while (true) {
-//            Resp r = readResp();
-//            model.set(r.getPoints());
-//        }
     }
 
     @Override

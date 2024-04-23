@@ -3,32 +3,21 @@ package com.example.goodmarksman;
 import com.example.goodmarksman.models.GameModel;
 import com.example.goodmarksman.objects.*;
 import com.example.goodmarksman.objects.Action;
-import com.google.gson.Gson;
 
 import java.io.*;
 import java.util.ArrayList;
 
 public class GameServer implements IObserver {
-//    GameModel model = Models.buildGM();
-    Gson gson = new Gson();
-
     private final ArrayList<Thread> messageListeners = new ArrayList<>();
     private Thread gameThread = null;
 
-    Action gameState = Action.GAME_STOPPED;
+    Action gameState = Action.NULL;
     boolean isPaused = false;
-    Thread sendState = null;
-
     int countReadyPlayers = 0;
 
     // Подключение к серверу
     public GameServer(Client cl) {
-//        addPlayer(cl);
         addListener(cl).start();
-
-//        gameThread = new Thread(this::run);
-//        gameThread.setDaemon(true);
-//        new Thread(this::run).start();
     }
 
     public Thread addListener(Client cl) {
@@ -59,32 +48,51 @@ public class GameServer implements IObserver {
             System.err.println("Error in addPlayer() in GameServer: " + e.getMessage());
             throw new RuntimeException(e);
         }
-//        Thread thread = new Thread(() -> messageListener(cl));
-//        thread.setDaemon(true);
-//        thread.start();
-//        messageListeners.add(thread);
         System.out.println("new players count " + MainServer.model.playersSize());
     }
 
+    private void stopGame() {
+        System.out.println("Stop Game was called.");
+
+        if (gameState == Action.NULL ||
+                gameThread == null ||
+                gameThread.isInterrupted()) return;
+
+        synchronized (this.gameThread) {
+            if (!isPaused) countReadyPlayers--;
+            gameThread.interrupt();
+            gameState = Action.GAME_STOPPED;
+            isPaused = false;
+            gameThread.notify();
+        }
+
+        gameThread = null;
+
+        MainServer.model.getDao().getClientsData().nullify();
+        MainServer.model.event();
+
+        synchronized (this) {
+            gameState = Action.NULL;
+        }
+    }
+
     void messageListener(Client cl) {
-        try {
-            while (true) {
+        while (!Thread.currentThread().isInterrupted()) {
+            try {
                 Msg msg = cl.readMsg();
 
                 synchronized (Thread.currentThread()) {
                     switch (msg.getAction()) {
-//                        case CONNECT:
-//                            System.out.println("Client say: " + msg.message);
-//                            break;
                         case CONNECTION_ERROR:
                             throw new Exception(msg.message);
                         case CLIENT_STATE:
                             System.out.println(msg.clientState);
 
-                            if (gameState == Action.GAME_STOPPED &&
+                            if (gameState == Action.NULL &&
                                 gameThread == null) {
                                 gameThread = new Thread(this::run);
                                 gameThread.setDaemon(true);
+                                gameState = Action.GAME_STOPPED;
                             }
 
                             if (gameState == Action.GAME_STARTED &&
@@ -122,10 +130,13 @@ public class GameServer implements IObserver {
                             break;
                         case GAME_STOPPED:
                             if (gameThread != null && gameThread.isAlive()) {
-                                gameState = Action.GAME_STOPPED;
-                                gameThread = null;
-                                MainServer.model.getDao().getClientsData().nullify();
-                                MainServer.model.event();
+//                                if (!isPaused) countReadyPlayers--;
+//                                isPaused = false;
+//                                gameState = Action.GAME_STOPPED;
+//                                gameThread = null;
+//                                MainServer.model.getDao().getClientsData().nullify();
+//                                MainServer.model.event();
+                                stopGame();
                             }
                             break;
                         case UPDATE_GAME_STATE:
@@ -151,51 +162,49 @@ public class GameServer implements IObserver {
                             break;
                     }
                 }
-            }
+            } catch (Exception e) {
+                System.err.println("Remove is called");
+                Thread.currentThread().interrupt();
+                try {
+                    System.out.println(gameState);
 
-        } catch (Exception e) {
-            try {
-                cl.getSocket().close();
-                System.err.println("Client " + cl.getSocket().getPort() + " closed.");
-                System.err.println("GameServer: " + e.getMessage());
-                gameState = Action.GAME_STOPPED;
-                gameThread.interrupt();
-                synchronized (this) {
+                    System.err.println("Client " + cl.getSocket().getPort() + " closed.");
+                    System.err.println("GameServer: " + e.getMessage());
+
+                    stopGame();
+
+                    for (Client client : MainServer.model.getDao().getPlayers()) {
+                        if (client == cl) continue;
+                        client.sendMsg(new Msg(
+                                MainServer.model.getClientData(cl.getSocket()),
+                                Action.CLIENT_DISCONNECTED
+                        ));
+                    }
+
                     messageListeners.remove(MainServer.model.getPlayerIndex(cl.getSocket()));
-                    MainServer.model.removePlayer(cl);
+                    MainServer.model.getDao().removeClient(cl);
                     MainServer.model.removeObserver(cl.getIObserver());
-//                        model.
-//                        System.out.println(model.getArray());
+//                    MainServer.model.event();
+                } catch (Exception err) {
+                    System.err.println("In Err on GameServer: " + err.getMessage());
+                    throw new RuntimeException(err);
                 }
-            } catch (Exception err) {
-                System.err.println(err.getMessage());
-                throw new RuntimeException(err);
             }
-
-            System.err.println("Remove is called");
         }
     }
 
-    //TODO: Запуск цикла среверной части
     void run() {
-        // TODO: Переезд в слушатель
-        //  if (checkState()) return;
         System.out.println("Game started!!!");
 
-        while (gameState == Action.GAME_STARTED) {
+        while (!Thread.currentThread().isInterrupted() && gameState == Action.GAME_STARTED) {
             if (isPaused) {
                 try {
                     synchronized (Thread.currentThread()) {
-                        try {
-                            gameThread.wait();
-                        } catch (InterruptedException e) {
-                            System.err.println(e.getMessage());
-                            this.stopGame();
-                        }
+                        gameThread.wait();
                     }
                 } catch (Exception e) {
-                    System.err.println(e.getMessage());
-                    this.stopGame();
+                    System.err.println("Game error: " + e.getMessage());
+                    stopGame();
                 }
             }
 
@@ -226,18 +235,18 @@ public class GameServer implements IObserver {
             try {
                 Thread.sleep(10);
             } catch(InterruptedException err) {
-                System.err.println(err.getMessage());
+                System.err.println("Sleep error in game thread: " + err.getMessage());
             }
         }
     }
 
-    public void stopGame() {
-        this.gameState = Action.GAME_STOPPED;
-        gameThread.interrupt();
-        gameThread = null;
-
-//        this.view.setStartPositions(target1, target2, arrow);
-    }
+//    public void stopGame() {
+//        gameState = Action.GAME_STOPPED;
+//        gameThread.interrupt();
+//        gameThread = null;
+//        gameState = Action.NULL;
+////        this.view.setStartPositions(target1, target2, arrow);
+//    }
 
     private void checkIsHit(Arrow arrow, ArrayList<Target> targets) {
         System.out.println("checker: " + arrow);
@@ -253,7 +262,33 @@ public class GameServer implements IObserver {
                     t.isHitted(arrow.getX(), arrow.getY())) {
                 arrow.hit();
                 t.hit();
-                MainServer.model.getDao().getClientsData().updateScore(arrow.getOwnerPort(), t.getWeight());
+                int score = MainServer.model.getDao().getClientsData().updateScore(arrow.getOwnerPort(), t.getWeight());
+                if (score >= 6) {
+                    ArrayList<Client> players = MainServer.model.getDao().getPlayers();
+                    try {
+                        Client winner_cl = null;
+                        for (Client cl: players) {
+                            if (cl.getSocket().getPort() == arrow.getOwnerPort()) {
+                                winner_cl = cl;
+                                break;
+                            }
+                        }
+
+                        assert winner_cl != null;
+                        for (Client cl: players) {
+                            if (cl == winner_cl) {
+                                cl.sendMsg(new Msg("!!!YOU WIN!!!", ClientState.WIN, Action.CLIENT_STATE));
+                            } else {
+                                cl.sendMsg(new Msg("!!!" + winner_cl.getName() + " is WINNER!!", ClientState.WIN, Action.CLIENT_STATE));
+                            }
+                        }
+
+                        stopGame();
+                    } catch (IOException e) {
+                        System.err.println("Win error: " + e.getMessage());
+                        throw new RuntimeException(e);
+                    }
+                }
             }
         }
     }

@@ -33,12 +33,6 @@ public class MainController implements IObserver {
 
     @FXML
     private Pane gameView;
-//    @FXML
-//    VBox scoreBord;
-//    @FXML
-//    private Circle bigTarget;
-//    @FXML
-//    private Circle smallTarget;
     @FXML
     private Polygon arrow;
     @FXML
@@ -103,8 +97,6 @@ public class MainController implements IObserver {
                 MainClient.m.getDao().setScoreList(scoreList);
                 MainClient.m.getDao().setShotsList(shotsList);
                 MainClient.m.getDao().setStatisticBoxes(statisticBoxes);
-//                MainClient.model.getDao().setSmallTarget(smallTarget);
-//                MainClient.model.getDao().setBigTarget(bigTarget);
                 MainClient.m.getDao().setArrow(arrow);
             }
 
@@ -113,16 +105,12 @@ public class MainController implements IObserver {
             MainClient.m.addObserver((model) -> {
 //                System.out.println("test");
                 System.out.println("Event out: " + MainClient.m.getDao().getClientsData().getArray());
-                ClientsDataArray dataObj = MainClient.m.getDao().getClientsData();
+//                ClientsDataArray dataObj = MainClient.m.getDao().getClientsData();
 
                 synchronized (Thread.currentThread()) {
-                    MainClient.m.getDao().updateTargets(dataObj.getTargets());
-
-                    for (ClientData data: dataObj.getArray()) {
-                        System.err.println("Player port: " + data.getPlayerPort());
-                        MainClient.m.getDao().updateArrow(data.getArrow());
-                        MainClient.m.getDao().updateScore(data.getScore(), data.getArrow().getColorName());
-                    }
+                    MainClient.m.getDao().updateTargets();
+                    MainClient.m.getDao().updateArrows();
+                    MainClient.m.getDao().updateScores();
 
                     MainClient.m.getDao().getClientsData().clearAllData();
                 }

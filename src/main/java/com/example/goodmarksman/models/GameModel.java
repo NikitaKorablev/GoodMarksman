@@ -74,10 +74,10 @@ public class GameModel {
 
     public Client getClient(int port) {
         if (port == -1) {
-            return dao.getClient(-1);
+            return dao.getPlayers().get(-1);
         }
 
-        return dao.getClient(dao.playerIndex(port));
+        return dao.getPlayers().get(dao.playerIndex(port));
     }
     public int getPlayerIndex(Socket s) { return dao.playerIndex(s.getPort()); }
 

@@ -23,15 +23,6 @@ public class Score {
 //        this.score = new Text();
 //        this.shotCount = new Text();
     }
-    public Score(Score s) {
-//        this.score = new Text();
-//        this.score.setText(s.score.getText());
-        this.scoreValue = s.scoreValue;
-//        this.shotCount = new Text();
-//        this.shotCount.setText(s.shotCount.getText());
-        this.shotCountValue = s.shotCountValue;
-    }
-
     public void nullify() {
         this.scoreValue = 0;
         this.shotCountValue = 0;
@@ -42,8 +33,9 @@ public class Score {
         this.scoreValue = i;
 //        Platform.runLater(() -> this.score.setText(Integer.toString(i)));
     }
-    public void scoreInc(int weight) {
+    public int scoreInc(int weight) {
         this.scoreValue += weight;
+        return this.scoreValue;
 //        setScore(this.scoreValue);
     }
     public void setStartScore() {

@@ -17,43 +17,10 @@ public class ClientsDataArray {
         targets.add(new Target(COLORS.RED, 350, 120, 10, -1, 2, 1));
         targets.add(new Target(COLORS.BLUE, 292, 120, 17, 1, 1, 2));
     }
-    public ClientsDataArray(ClientData data) {
-        clientsData.add(data);
 
-        freeColors.add(COLORS.DARK_BLUE);
-        freeColors.add(COLORS.ORANGE);
-        freeColors.add(COLORS.BLACK);
-        freeColors.add(COLORS.PURPLE);
-
-        targets.add(new Target(COLORS.BLUE, 350, 120, 10, -1, 1, 1));
-        targets.add(new Target(COLORS.RED, 292, 120, 17, 1, 2, 2));
-    }
-    public ClientsDataArray(String playerName, int socketPort, Arrow arrow, Score score) {
-        clientsData.add(new ClientData(playerName, socketPort, arrow, score));
-
-        freeColors.add(COLORS.DARK_BLUE);
-        freeColors.add(COLORS.ORANGE);
-        freeColors.add(COLORS.BLACK);
-        freeColors.add(COLORS.PURPLE);
-
-        targets.add(new Target(COLORS.BLUE, 350, 120, 10, -1, 1, 1));
-        targets.add(new Target(COLORS.RED, 292, 120, 17, 1, 2, 2));
-    }
-    public ClientsDataArray(ArrayList<ClientData> data) {
-        clientsData.addAll(data);
-
-        freeColors.add(COLORS.DARK_BLUE);
-        freeColors.add(COLORS.ORANGE);
-        freeColors.add(COLORS.BLACK);
-        freeColors.add(COLORS.PURPLE);
-
-        targets.add(new Target(COLORS.BLUE, 350, 120, 10, -1, 1, 1));
-        targets.add(new Target(COLORS.RED, 292, 120, 17, 1, 2, 2));
-    }
-
-    public void updateScore(int port, int value) {
+    public int updateScore(int port, int value) {
 //        if (value == 0) getData(port).getScore().shotCountInc();
-        getData(port).getScore().scoreInc(value);
+        return getData(port).getScore().scoreInc(value);
     }
 
     public void nullify() {
