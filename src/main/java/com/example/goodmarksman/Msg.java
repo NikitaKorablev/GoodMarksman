@@ -96,6 +96,7 @@ public class Msg {
                 ", scoreBoard=" + scoreBoard +
                 ", arrow=" + arrow +
                 ", clientsData=" + clientsData +
+                ", clientData=" + clientData +
                 ", message='" + message + '\'' +
                 ", view_width=" + view_width +
                 ", view_height=" + view_height +

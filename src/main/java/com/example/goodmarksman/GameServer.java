@@ -17,14 +17,27 @@ public class GameServer implements IObserver {
 
     // Подключение к серверу
     public GameServer(Client cl) {
-        addListener(cl).start();
+        addListener(cl);
     }
 
-    public Thread addListener(Client cl) {
+    public void addListener(Client cl) {
         Thread thread = new Thread(() -> messageListener(cl));
         thread.setDaemon(true);
         messageListeners.add(thread);
-        return thread;
+
+        cl.setIObserver((model) -> {
+            try {
+                Msg message = new Msg(MainServer.model.getPlayersData(), Action.UPDATE_GAME_STATE);
+                System.out.println("Server Observer: " + MainServer.model.getPlayersData());
+                cl.sendMsg(message);
+            } catch (IOException e) {
+                System.err.println("Event error: " + e.getMessage());
+            }
+        });
+
+        MainServer.model.addObserver(cl.getIObserver());
+
+        thread.start();
     }
 
     public void addPlayer(Client cl) {
@@ -124,9 +137,27 @@ public class GameServer implements IObserver {
                             break;
                         case SET_NAME:
 //                            MainServer.model.getDao().setClientName(cl.getSocket(), msg.message);
+                            System.err.println("SET_NAME: " + MainServer.model.getDao().getPlayers());
+                            for (Client client: MainServer.model.getDao().getPlayers()) {
+                                if (client.getName().equals(msg.message)) {
+                                    System.err.println("Name error");
+                                    cl.sendMsg(new Msg(
+                                            "Player with the same name is already added.",
+                                            Action.CONNECTION_ERROR
+                                    ));
+                                    Thread.currentThread().interrupt();
+                                    messageListeners.remove(MainServer.model.getDao().getPlayers().size());
+//                                    MainServer.model.getDao().removeClient(cl);
+                                    MainServer.model.removeObserver(cl.getIObserver());
+                                    return;
+                                }
+                            }
+
+                            cl.sendMsg(new Msg("", Action.CLIENT_CONNECTED));
                             cl.setName(msg.message);
                             addPlayer(cl);
-//                            cl.sendMsg(new Msg("", MsgAction.CLIENT_CONNECTED));
+
+                            //                            cl.sendMsg(new Msg("", MsgAction.CLIENT_CONNECTED));
                             break;
                         case GAME_STOPPED:
                             if (gameThread != null && gameThread.isAlive()) {
@@ -166,8 +197,6 @@ public class GameServer implements IObserver {
                 System.err.println("Remove is called");
                 Thread.currentThread().interrupt();
                 try {
-                    System.out.println(gameState);
-
                     System.err.println("Client " + cl.getSocket().getPort() + " closed.");
                     System.err.println("GameServer: " + e.getMessage());
 

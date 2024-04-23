@@ -4,6 +4,7 @@ package com.example.goodmarksman;
 import com.example.goodmarksman.models.GameModel;
 import com.example.goodmarksman.objects.*;
 import com.example.goodmarksman.objects.Action;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -20,6 +21,7 @@ import javafx.scene.text.Text;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class MainController implements IObserver {
@@ -118,6 +120,21 @@ public class MainController implements IObserver {
         }
     }
 
+    private void init_connection() {
+        try {
+            ip = InetAddress.getLocalHost();
+            Socket ss = new Socket(ip, port);
+            System.out.println("ClientStart \n");
+
+            MainClient.server = new Client(ss);
+            MainClient.game = new GameClient(MainClient.server);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+
     @FXML
     void connect() {
         System.out.println("Connect called");
@@ -128,15 +145,23 @@ public class MainController implements IObserver {
             MainClient.playerName = inputNameField.getText();
             if (MainClient.playerName.isEmpty()) throw new Exception("Player name is empty");
 
-            ip = InetAddress.getLocalHost();
-            Socket ss = new Socket(ip, port);
-            System.out.println("ClientStart \n");
-
-            MainClient.server = new Client(ss);
-            MainClient.game = new GameClient(MainClient.server);
-
+            init_connection();
             // TODO: отправка имени игрока на сервер
             MainClient.server.sendMsg(new Msg(MainClient.playerName, Action.SET_NAME));
+
+            Msg message = MainClient.server.readMsg();
+            System.err.println("err get: " + message);
+            System.err.println(message.action == Action.CONNECTION_ERROR);
+            if (message.action == Action.CONNECTION_ERROR) {
+                Platform.runLater(() ->
+                    new Alert(Alert.AlertType.ERROR, message.message).show()
+                );
+                MainClient.server.getSocket().close();
+                MainClient.server = null;
+                MainClient.game = null;
+                return;
+            }
+
             // TODO: проверка имени на идентичнсть
 
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("game-view.fxml"));
@@ -145,7 +170,6 @@ public class MainController implements IObserver {
             MainClient.primaryStage.show();
 
             MainClient.game.messageListener.start();
-
         } catch (Exception e) {
             // При отключении сервера, клиент уходит в переподключение
             new Alert(Alert.AlertType.ERROR, e.getMessage()).show();
