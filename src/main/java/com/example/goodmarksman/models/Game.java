@@ -1,11 +1,14 @@
-package com.example.goodmarksman.objects;
+package com.example.goodmarksman.models;
 
-import com.example.goodmarksman.View;
+//import com.example.goodmarksman.View;
+import com.example.goodmarksman.objects.Arrow;
+import com.example.goodmarksman.objects.COLORS;
+import com.example.goodmarksman.objects.Target;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 
 public class Game {
-    private final View view;
+//    private final View view;
     private Target target1;
     private Target target2;
     private Arrow arrow;
@@ -15,29 +18,29 @@ public class Game {
 
     public boolean isPaused = false;
 
-    public Game(Circle target1, Circle target2, Polygon arrow, View view) {
-        this.view = view;
-        this.target1 = new Target(target1, COLORS.BLUE, -1, 1, 1);
-        this.target2 = new Target(target2, COLORS.RED, 1, 2, 2);
-        this.arrow = new Arrow(arrow);
+    public Game(Circle target1, Circle target2, Polygon arrow) {
+//        this.view = view;
+//        this.target1 = new Target(target1, COLORS.BLUE, -1, 1, 1);
+//        this.target2 = new Target(target2, COLORS.RED, 1, 2, 2);
+//        this.arrow = new Arrow(arrow);
     }
 
-    private void eventCheck(View view) {
-        if (arrow.getX() >= target1.getX() - target1.getRadius() && arrow.getX() <= target1.getX()) {
-            if (target1.isHitted(arrow.getX(), arrow.getY())) {
-                view.paint(target1, COLORS.GREEN);
-                view.hit(target1, arrow);
-            }
-        } else if (arrow.getX() >= target2.getX() - target2.getRadius() && arrow.getX() <= target2.getX()) {
-            if (target2.isHitted(arrow.getX(), arrow.getY())) {
-                view.paint(target2, COLORS.GREEN);
-                view.hit(target2, arrow);
-            }
-        } else if (arrow.getX() >= view.getMaxX()) {
-            arrow.setIsShooting(false);
-            arrow.setX(view.getArrowStartPosition());
-        }
-    }
+//    private void eventCheck(View view) {
+//        if (arrow.getX() >= target1.getX() - target1.getRadius() && arrow.getX() <= target1.getX()) {
+//            if (target1.isHitted(arrow.getX(), arrow.getY())) {
+//                view.paint(target1, COLORS.GREEN);
+//                view.hit(target1, arrow);
+//            }
+//        } else if (arrow.getX() >= target2.getX() - target2.getRadius() && arrow.getX() <= target2.getX()) {
+//            if (target2.isHitted(arrow.getX(), arrow.getY())) {
+//                view.paint(target2, COLORS.GREEN);
+//                view.hit(target2, arrow);
+//            }
+//        } else if (arrow.getX() >= view.getMaxX()) {
+//            arrow.setIsShooting(false);
+//            arrow.setX(view.getArrowStartPosition());
+//        }
+//    }
 
     private void gameFreeze(int time) {
         try {
@@ -66,7 +69,7 @@ public class Game {
         return false;
     }
 
-    public void setArrowY(double y) { this.view.setArrowY(arrow, y); }
+//    public void setArrowY(double y) { this.view.setArrowY(arrow, y); }
 
     public void startGame() {
         if (checkState()) return;
@@ -89,14 +92,7 @@ public class Game {
                     }
                 }
 
-
-                this.view.move(target1);
-                this.view.move(target2);
-
-                if (arrow.getIsShooting()) {
-                    this.view.move(arrow);
-                    this.eventCheck(this.view);
-                }
+                if (arrow.getIsShooting()) {}
 
                 try {
                     Thread.sleep(10);
@@ -120,7 +116,7 @@ public class Game {
         this.state = GameState.STOPPED;
         gameThread = null;
 
-        this.view.setStartPositions(target1, target2, arrow);
+//        this.view.setStartPositions(target1, target2, arrow);
     }
 
     public void shot() {
@@ -128,7 +124,7 @@ public class Game {
             if (arrow.getIsShooting()) return;
 
             arrow.setIsShooting(true);
-            this.view.shotInc();
+//            this.view.shotInc();
         }
     }
 

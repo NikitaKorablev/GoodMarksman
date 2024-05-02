@@ -2,7 +2,7 @@ package com.example.goodmarksman;
 
 import com.example.goodmarksman.objects.Arrow;
 import com.example.goodmarksman.objects.COLORS;
-import com.example.goodmarksman.objects.ScoreTable;
+import com.example.goodmarksman.objects.Score;
 import com.example.goodmarksman.objects.Target;
 import javafx.application.Platform;
 import javafx.scene.layout.Pane;
@@ -10,7 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 public class View {
-    private final ScoreTable scoreBoard;
+    private final Score scoreBoard;
     private final double lowerThreshold;
     private final double upperThreshold;
     private final double targetStartPos;
@@ -18,7 +18,7 @@ public class View {
     private final double max_x = 380;
 
     View(Pane parentPane, Text score, Text shotCount) {
-        this.scoreBoard = new ScoreTable(score, shotCount);
+        this.scoreBoard = new Score(score, shotCount);
         this.lowerThreshold = 0;
         this.upperThreshold = parentPane.getHeight();
         this.targetStartPos = this.upperThreshold / 2;
@@ -37,11 +37,11 @@ public class View {
 
     public double getMaxX() { return max_x; }
     public void paint(Target target, COLORS color) {
-        switch (color) {
-            case RED -> target.setColor(Color.rgb(255, 33, 33));
-            case BLUE -> target.setColor(Color.rgb(33, 212, 255));
-            case GREEN -> target.setColor(Color.rgb(0, 128, 0));
-        }
+//        switch (color) {
+//            case RED -> target.setColor(Color.rgb(255, 33, 33));
+//            case BLUE -> target.setColor(Color.rgb(33, 212, 255));
+//            case GREEN -> target.setColor(Color.rgb(0, 128, 0));
+//        }
     }
     public void move(Target target) {
         double newY = target.getY() + target.getMoveSpeed() * target.getOrientation();
@@ -50,13 +50,13 @@ public class View {
             target.setOrientation(target.getOrientation() * (-1));
             newY = target.getY() + target.getMoveSpeed() * target.getOrientation();
         }
-        target.setY(newY);
+//        target.setY(newY);
 
-        try {
-            if (target.updateCoolDown()) { paint(target, target.getColor()); }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+//        try {
+//            if (target.updateCoolDown()) { paint(target, target.getColor()); }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     }
     public void move(Arrow arrow) {
         double newX = arrow.getX() + arrow.getSpeed();
@@ -70,10 +70,10 @@ public class View {
     }
 
     public void setStartPositions(Target target1, Target target2, Arrow arrow) {
-        target1.setY(this.targetStartPos);
+//        target1.setY(this.targetStartPos);
         target1.setOrientation(target1.getStartOrientation());
 
-        target2.setY(this.targetStartPos);
+//        target2.setY(this.targetStartPos);
         target2.setOrientation(target2.getStartOrientation());
 
         arrow.setX(this.arrowStartPosition);
