@@ -1,6 +1,6 @@
 package com.example.goodmarksman.objects;
 
-import javafx.application.Platform;
+import com.example.goodmarksman.enams.COLORS;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 

@@ -2,7 +2,6 @@ package com.example.goodmarksman;
 
 import com.example.goodmarksman.models.GameModel;
 import com.example.goodmarksman.objects.Client;
-import com.example.goodmarksman.objects.Action;
 
 import java.io.*;
 import java.net.InetAddress;

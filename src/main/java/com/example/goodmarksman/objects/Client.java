@@ -1,12 +1,10 @@
 package com.example.goodmarksman.objects;
 
 import com.example.goodmarksman.IObserver;
-import com.example.goodmarksman.Msg;
 import com.google.gson.Gson;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
 
 public class Client {
     String name = "";

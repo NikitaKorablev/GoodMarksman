@@ -4,7 +4,7 @@ package com.example.goodmarksman.models;
 //import com.example.goodmarksman.models.SCGame;
 import com.example.goodmarksman.DAO;
 import com.example.goodmarksman.IObserver;
-import com.example.goodmarksman.Msg;
+import com.example.goodmarksman.objects.Msg;
 import com.example.goodmarksman.objects.*;
 
 import java.io.IOException;

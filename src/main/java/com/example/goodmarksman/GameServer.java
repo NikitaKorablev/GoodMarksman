@@ -1,8 +1,9 @@
 package com.example.goodmarksman;
 
+import com.example.goodmarksman.enams.ClientState;
 import com.example.goodmarksman.models.GameModel;
 import com.example.goodmarksman.objects.*;
-import com.example.goodmarksman.objects.Action;
+import com.example.goodmarksman.enams.Action;
 
 import java.io.*;
 import java.util.ArrayList;

@@ -1,34 +1,21 @@
-package com.example.goodmarksman;
+package com.example.goodmarksman.objects;
 
-import com.example.goodmarksman.objects.*;
-import com.example.goodmarksman.objects.Action;
+import com.example.goodmarksman.enams.Action;
+import com.example.goodmarksman.enams.ClientState;
 
 import java.util.ArrayList;
 
 public class Msg {
-    Action action = null;
-    ClientState clientState = null;
-    ArrayList<Score> scoreBoard = null;
-    Arrow arrow = null;
-//    ArrayList<Client> players = null;
-//    ArrayList<Arrow> arrows = null;
-//    ArrayList<Score> score = null;
-//    ClientsData clientsData = null;
-    ClientsDataArray clientsData = null;
-    ClientData clientData = null;
-    String message = null;
-    int view_width;
-    int view_height;
-    int portOwner = -1;
-
-//    public Msg(ArrayList<Score> scoreBoard, MsgAction action) {
-//        this.scoreBoard = scoreBoard;
-//        this.action = action;
-//    }
-
-    public Msg(ArrayList<Score> scoreBoard) {
-        this.scoreBoard = scoreBoard;
-    }
+    public Action action = null;
+    public ClientState clientState = null;
+    public ArrayList<Score> scoreBoard = null;
+    public Arrow arrow = null;
+    public ClientsDataArray clientsData = null;
+    public ClientData clientData = null;
+    public String message = null;
+    public int view_width;
+    public int view_height;
+    public int portOwner = -1;
 
     public Msg(String message, Action action) {
         this.action = action;

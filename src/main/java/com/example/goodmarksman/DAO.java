@@ -1,6 +1,7 @@
 package com.example.goodmarksman;
 
 //import com.example.goodmarksman.models.Game;
+import com.example.goodmarksman.enams.COLORS;
 import com.example.goodmarksman.objects.*;
 import javafx.application.Platform;
 import javafx.scene.Node;

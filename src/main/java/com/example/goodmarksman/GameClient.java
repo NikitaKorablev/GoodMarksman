@@ -1,12 +1,11 @@
 package com.example.goodmarksman;
 
+import com.example.goodmarksman.enams.ClientState;
 import com.example.goodmarksman.models.GameModel;
 import com.example.goodmarksman.objects.*;
-import com.example.goodmarksman.objects.Action;
+import com.example.goodmarksman.enams.Action;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
-
-import java.util.ArrayList;
 
 public class GameClient implements IObserver {
     Action gameState = Action.GAME_STOPPED;
@@ -14,7 +13,6 @@ public class GameClient implements IObserver {
     public Thread messageListener;
 
     private final Client server;
-    private ArrayList<Client> players = new ArrayList<>();
 
     // Подключение к серверу
     public GameClient(Client server) throws Exception {

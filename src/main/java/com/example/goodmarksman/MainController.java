@@ -1,9 +1,10 @@
 package com.example.goodmarksman;
 
 //import com.example.goodmarksman.models.Game;
+import com.example.goodmarksman.enams.ClientState;
 import com.example.goodmarksman.models.GameModel;
 import com.example.goodmarksman.objects.*;
-import com.example.goodmarksman.objects.Action;
+import com.example.goodmarksman.enams.Action;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -14,14 +15,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class MainController implements IObserver {

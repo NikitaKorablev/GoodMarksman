@@ -2,7 +2,6 @@ package com.example.goodmarksman.models;
 
 //import com.example.goodmarksman.View;
 import com.example.goodmarksman.objects.Arrow;
-import com.example.goodmarksman.objects.COLORS;
 import com.example.goodmarksman.objects.Target;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Polygon;

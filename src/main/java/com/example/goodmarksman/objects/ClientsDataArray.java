@@ -1,5 +1,7 @@
 package com.example.goodmarksman.objects;
 
+import com.example.goodmarksman.enams.COLORS;
+
 import java.util.ArrayList;
 
 public class ClientsDataArray {

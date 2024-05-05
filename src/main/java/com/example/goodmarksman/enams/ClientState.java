@@ -1,4 +1,4 @@
-package com.example.goodmarksman.objects;
+package com.example.goodmarksman.enams;
 
 public enum ClientState {
     READY,
