@@ -3,9 +3,11 @@ package com.example.goodmarksman.models;
 //import com.example.goodmarksman.models.Game;
 //import com.example.goodmarksman.models.SCGame;
 import com.example.goodmarksman.DAO;
+import com.example.goodmarksman.DAO_DB;
 import com.example.goodmarksman.IObserver;
 import com.example.goodmarksman.objects.Msg;
 import com.example.goodmarksman.objects.*;
+import org.sqlite.core.DB;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -16,8 +18,9 @@ public class GameModel {
     private static DAO dao;
     private static final ArrayList<IObserver> allO = new ArrayList<>();
 
-    public GameModel() {
-        dao = new DAO();
+    public GameModel(boolean isServer) {
+        if (isServer) dao = new DAO_DB();
+        else dao = new DAO();
     }
 
     public static ArrayList<IObserver> getAllO() {

@@ -13,4 +13,5 @@ public enum Action {
     SET_NAME,
     WIDTH_INIT,
     SHOT,
+    GET_DB
 }

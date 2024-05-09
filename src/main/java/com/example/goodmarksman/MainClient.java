@@ -10,7 +10,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class MainClient extends Application {
-    public static final GameModel m = Models.buildGM();
+    public static final GameModel m = Models.buildGM(false);
     public static GameClient game = null;
     public static Client server = null;
     public static String playerName = "";

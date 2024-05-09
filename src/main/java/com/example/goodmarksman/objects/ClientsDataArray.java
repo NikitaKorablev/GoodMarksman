@@ -25,6 +25,10 @@ public class ClientsDataArray {
         return getData(port).getScore().scoreInc(value);
     }
 
+    public Score getScore(int port) {
+        return getData(port).getScore();
+    }
+
     public void nullify() {
         for (Target t: targets) {
             t.setY(t.getStartY());
@@ -58,7 +62,6 @@ public class ClientsDataArray {
             }
         }
 
-//        getData(port).getArrow().setIsShooting(true);
         System.err.println("Test arrow set is shot: " + getData(port).getArrow());
     }
 
@@ -70,9 +73,7 @@ public class ClientsDataArray {
         }
     }
 
-    public ArrayList<Target> getTargets() {
-        return targets;
-    }
+    public ArrayList<Target> getTargets() { return targets; }
 
     //    public void add(Data data) { clientsData.add(data); }
     public ClientData add(String playerName, int socketPort, Arrow arrow, Score score) {
@@ -81,15 +82,13 @@ public class ClientsDataArray {
         freeColors.remove(0);
 
         ClientData data = new ClientData(playerName, socketPort, arrow, score);
-        clientsData.add(data);
+        this.clientsData.add(data);
 
         return data;
     }
 
     public ClientData getData(int socketPort) {
-        System.err.println(socketPort);
-        System.err.println("Get data: " + clientsData);
-        for (ClientData data : clientsData) {
+        for (ClientData data : this.clientsData) {
             if (data.getPlayerPort() == socketPort) {
                 return data;
             }

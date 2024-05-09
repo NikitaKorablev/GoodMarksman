@@ -17,6 +17,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -161,8 +162,6 @@ public class MainController implements IObserver {
                 return;
             }
 
-            // TODO: проверка имени на идентичнсть
-
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("game-view.fxml"));
 
             MainClient.primaryStage.setScene(new Scene(fxmlLoader.load()));
@@ -212,6 +211,17 @@ public class MainController implements IObserver {
             }
         }
     }
+    @FXML
+    protected void onScoreBordButtonClick() {
+        try {
+            MainClient.server.sendMsg(new Msg(Action.GET_DB));
+
+
+        } catch (Exception e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
     @FXML
     protected void onStopButtonClick() {
         if (gameView == null || MainClient.game.gameState == Action.GAME_STOPPED) return;

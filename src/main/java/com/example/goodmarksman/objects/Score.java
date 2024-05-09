@@ -1,34 +1,53 @@
 package com.example.goodmarksman.objects;
 
+import javax.persistence.*;
 import javafx.scene.text.Text;
 
+@Entity
+@Table (name = "Score")
 public class Score {
-//    Text score = null;
-//    Text shotCount = null;
-    private int portOwner;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id = 0;
+
+    @Column(name = "PlayerName")
     private String playerName = "";
+
+    @Column(name = "Hits")
     private int scoreValue = 0;
+
+    @Column(name = "ShotsCount")
     private int shotCountValue = 0;
 
-    public Score(Text score, Text shot) {
-//        this.score = score;
-//        this.shotCount = shot;
-        this.scoreValue = Integer.parseInt(score.getText());
-        this.shotCountValue = Integer.parseInt(shot.getText());
+    private int portOwner;
+
+    public Score() {}
+
+    public Score(String playerName, int scoreValue, int shotCountValue) {
+        this.playerName = playerName;
+        this.scoreValue = scoreValue;
+        this.shotCountValue = shotCountValue;
     }
+
+//    public Score(Text score, Text shot) {
+////        this.score = score;
+////        this.shotCount = shot;
+//        this.scoreValue = Integer.parseInt(score.getText());
+//        this.shotCountValue = Integer.parseInt(shot.getText());
+//    }
     public Score(int port) {
         this.portOwner = port;
     }
-    public Score() {
-//        this.score = new Text();
-//        this.shotCount = new Text();
-    }
+
     public void nullify() {
         this.scoreValue = 0;
         this.shotCountValue = 0;
     }
 
-    public int getScore() { return this.scoreValue; }
+    public void setId(int id) { this.id = id; }
+    public int getId() { return id; }
+
+    public int getScoreValue() { return this.scoreValue; }
     public void setScore(int i) {
         this.scoreValue = i;
 //        Platform.runLater(() -> this.score.setText(Integer.toString(i)));
@@ -49,7 +68,7 @@ public class Score {
     public int getOwnerPort() { return this.portOwner; }
     public void setOwnerPort(int port) { this.portOwner = port; }
 
-    public int getShotCount() { return this.shotCountValue; }
+    public int getShotCountValue() { return this.shotCountValue; }
     public void setShotCount(int i) {
         this.shotCountValue = i;
 //        Platform.runLater(() -> this.shotCount.setText(Integer.toString(i)));
