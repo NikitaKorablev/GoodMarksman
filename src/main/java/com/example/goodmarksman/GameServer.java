@@ -4,6 +4,7 @@ import com.example.goodmarksman.enams.ClientState;
 import com.example.goodmarksman.models.GameModel;
 import com.example.goodmarksman.objects.*;
 import com.example.goodmarksman.enams.Action;
+import org.jboss.jandex.Main;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -100,55 +101,41 @@ public class GameServer implements IObserver {
                         case CONNECTION_ERROR:
                             throw new Exception(msg.message);
                         case CLIENT_STATE:
-                            System.out.println(msg.clientState);
-
                             if (gameState == Action.NULL &&
                                 gameThread == null) {
                                 gameThread = new Thread(this::run);
                                 gameThread.setDaemon(true);
                                 gameState = Action.GAME_STOPPED;
                             }
-
                             if (gameState == Action.GAME_STARTED &&
                                     isPaused
                                     && msg.clientState == ClientState.READY) {
                                 this.countReadyPlayers++;
-                                System.err.println(countReadyPlayers);
                                 if (this.countReadyPlayers == MainServer.model.playersSize()) isStarted();
                                 break;
                             } else if (msg.clientState == ClientState.NOT_READY) {
                                 isPaused = true;
                                 this.countReadyPlayers--;
-                                System.err.println(countReadyPlayers);
                             } else if (gameState == Action.GAME_STOPPED &&
                                     msg.clientState == ClientState.READY) {
-                                // Проверка на уже запущенную игру
                                 if (isStarted()) break;
-
                                 this.countReadyPlayers++;
-                                System.err.println(countReadyPlayers);
-                                //TODO: готово не больше 4 игроков
                                 if (this.countReadyPlayers == MainServer.model.playersSize()) {
                                     isPaused = false;
                                     gameState = Action.GAME_STARTED;
                                     gameThread.start();
                                 }
                             }
-
                             break;
                         case SET_NAME:
-//                            MainServer.model.getDao().setClientName(cl.getSocket(), msg.message);
-                            System.err.println("SET_NAME: " + MainServer.model.getDao().getPlayers());
                             for (Client client: MainServer.model.getDao().getPlayers()) {
                                 if (client.getName().equals(msg.message)) {
-                                    System.err.println("Name error");
                                     cl.sendMsg(new Msg(
                                             "Player with the same name is already added.",
                                             Action.CONNECTION_ERROR
                                     ));
                                     Thread.currentThread().interrupt();
                                     messageListeners.remove(MainServer.model.getDao().getPlayers().size());
-//                                    MainServer.model.getDao().removeClient(cl);
                                     MainServer.model.removeObserver(cl.getIObserver());
                                     return;
                                 }
@@ -157,17 +144,9 @@ public class GameServer implements IObserver {
                             cl.sendMsg(new Msg("", Action.CLIENT_CONNECTED));
                             cl.setName(msg.message);
                             addPlayer(cl);
-
-                            //                            cl.sendMsg(new Msg("", MsgAction.CLIENT_CONNECTED));
                             break;
                         case GAME_STOPPED:
                             if (gameThread != null && gameThread.isAlive()) {
-//                                if (!isPaused) countReadyPlayers--;
-//                                isPaused = false;
-//                                gameState = Action.GAME_STOPPED;
-//                                gameThread = null;
-//                                MainServer.model.getDao().getClientsData().nullify();
-//                                MainServer.model.event();
                                 stopGame();
                             }
                             break;
@@ -178,7 +157,6 @@ public class GameServer implements IObserver {
                             }
                             break;
                         case SHOT:
-//                            System.err.println("SHOT " + msg.message);
                             MainServer.model.getDao().getClientsData().arrowShot(cl.getSocket().getPort());
                             break;
                         case WIDTH_INIT:
@@ -189,6 +167,11 @@ public class GameServer implements IObserver {
                                 t.setUpperThreshold(msg.view_height);
                             }
                             break;
+                        case GET_DB:
+                            cl.sendMsg(new Msg(
+                                    MainServer.model.getDao().getScoreBord("*"),
+                                    Action.GET_DB
+                            ));
                         default:
                             System.out.println("Get message: " + msg.action);
                             break;
@@ -214,7 +197,6 @@ public class GameServer implements IObserver {
                     messageListeners.remove(MainServer.model.getPlayerIndex(cl.getSocket()));
                     MainServer.model.getDao().removeClient(cl);
                     MainServer.model.removeObserver(cl.getIObserver());
-//                    MainServer.model.event();
                 } catch (Exception err) {
                     System.err.println("In Err on GameServer: " + err.getMessage());
                     throw new RuntimeException(err);
@@ -298,24 +280,41 @@ public class GameServer implements IObserver {
                     try {
                         Client winner_cl = null;
                         for (Client cl: players) {
-                            if (cl.getSocket().getPort() == arrow.getOwnerPort()) {
+                            if (winner_cl == null && cl.getSocket().getPort() == arrow.getOwnerPort()) {
                                 winner_cl = cl;
-                                break;
                             }
+
+                            MainServer.model.getDao().insertScore(
+                                    MainServer.model.getDao().getClientsData()
+                                            .getScore(cl.getSocket().getPort())
+                            );
                         }
 
                         assert winner_cl != null;
+                        System.out.println("Players: " + players);
                         for (Client cl: players) {
                             if (cl == winner_cl) {
-                                cl.sendMsg(new Msg("!!!YOU WIN!!!", ClientState.WIN, Action.CLIENT_STATE));
+                                cl.sendMsg(new Msg(
+                                        "!!!YOU WIN!!!",
+                                        MainServer.model.getDao().getScoreBord("*"),
+                                        ClientState.WIN,
+                                        Action.CLIENT_STATE
+                                ));
                             } else {
-                                cl.sendMsg(new Msg("!!!" + winner_cl.getName() + " is WINNER!!", ClientState.WIN, Action.CLIENT_STATE));
+                                cl.sendMsg(new Msg(
+                                        "!!!" + winner_cl.getName() + " is WINNER!!",
+                                        MainServer.model.getDao().getScoreBord("*"),
+                                        ClientState.WIN,
+                                        Action.CLIENT_STATE
+                                ));
                             }
                         }
 
                         stopGame();
                     } catch (IOException e) {
                         System.err.println("Win error: " + e.getMessage());
+                        throw new RuntimeException(e);
+                    } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
                 }

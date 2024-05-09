@@ -22,11 +22,13 @@ import java.util.function.Consumer;
 
 //TODO: Будет отвечать за ведение счета всех игроков
 // и хранение игровых объектов
-public class DAO implements Iterable<Score> {
+public class DAO {
     private Pane gameView;
     private Circle smallTarget = null;
     private Circle bigTarget = null;
     private Polygon arrow;
+
+    protected ArrayList<Score> DB_Score = new ArrayList<>();
 
     private final ArrayList<Polygon> arrows = new ArrayList<>();
 
@@ -36,6 +38,14 @@ public class DAO implements Iterable<Score> {
 
     private final ClientsDataArray clientsData = new ClientsDataArray();
     private final ArrayList<Client> players = new ArrayList<>();
+
+    protected ArrayList<Score> getScoreBord(ArrayList<String> playerNames) {
+        return null;
+    }
+    protected ArrayList<Score> getScoreBord(String name) {
+        return null;
+    }
+    protected void insertScore(Score score) throws Exception {}
 
     public int playersSize() {
         return players.size();
@@ -267,8 +277,8 @@ public class DAO implements Iterable<Score> {
                         }
                     }
 
-                    this.scoreList.get(0).setText(String.valueOf(data.getScore().getScore()));
-                    this.shotsList.get(0).setText(String.valueOf(data.getScore().getShotCount()));
+                    this.scoreList.get(0).setText(String.valueOf(data.getScore().getScoreValue()));
+                    this.shotsList.get(0).setText(String.valueOf(data.getScore().getShotCountValue()));
                 });
             } else {
                 System.err.println("score: " + data.getScore());
@@ -289,107 +299,12 @@ public class DAO implements Iterable<Score> {
                             label.setText(data.getScore().getPlayerName());
                         }
 
-                        this.scoreList.get(iter).setText(String.valueOf(data.getScore().getScore()));
-                        this.shotsList.get(iter).setText(String.valueOf(data.getScore().getShotCount()));
+                        this.scoreList.get(iter).setText(String.valueOf(data.getScore().getScoreValue()));
+                        this.shotsList.get(iter).setText(String.valueOf(data.getScore().getShotCountValue()));
                     }
                 });
                 ++i;
             }
         }
-//
-//        for (int ind = i; ind < 4; ++ind) {
-//            Circle circle = null;
-//            Label label = null;
-//            for (Node node: statisticBoxes.get(i).getChildren()) {
-//                if (node instanceof Circle)
-//                    circle = (Circle) node;
-//                else if (node instanceof Label)
-//                    label = (Label) node;
-//            }
-//
-//            if (circle != null && label != null) {
-//                if (label.getText().isEmpty()) {
-//                    circle.setFill(Color.WHITE);
-//                    label.setText("");
-//
-//                }
-//                int iter = i;
-//                Platform.runLater(() -> {
-//                    this.scoreList.get(iter).setText("0");
-//                    this.shotsList.get(iter).setText("0");
-//                });
-//            }
-//        }
     }
-
-    //    ArrayList<Score> scoreBoard = new ArrayList<>();
-
-//    public Game getGame(Circle target1, Circle target2, Polygon arrow) {
-////        return new Game(target1, target2, arrow);
-//    }
-
-//    public ArrayList<Score> getScoreBoard() {
-//        return scoreBoard;
-//    }
-
-//    public void set(ArrayList<Score> scoreBoard) {
-//        this.scoreBoard = scoreBoard;
-//    }
-
-//    public void add(Score score) {
-//        this.scoreBoard.add(score);
-//    }
-
-//    public void remove(Socket cs) {
-//        this.scoreBoard.removeIf(s -> s.getSocket() == cs);
-//    }
-
-    @Override
-    public Iterator<Score> iterator() {
-//        return scoreBoard.iterator();
-        return null;
-    }
-
-    @Override
-    public void forEach(Consumer<? super Score> action) {
-        Iterable.super.forEach(action);
-    }
-
-    @Override
-    public Spliterator<Score> spliterator() {
-        return Iterable.super.spliterator();
-    }
-
-    //    ArrayList<Point> allPoint = new ArrayList<>();
-//
-//    void set(ArrayList<Point> allPoint) {
-//        this.allPoint = allPoint;
-//    }
-//
-//    public ArrayList<Point> getPoints() {
-//        return allPoint;
-//    }
-//
-//    void add(Point p) {
-//        allPoint.add(p);
-//    }
-//
-//    void remove(Point p) {
-//        allPoint.remove(p);
-//    }
-//
-//    @Override
-//    public Iterator<Point> iterator() {
-//        return allPoint.iterator();
-//    }
-//
-//    @Override
-//    public void forEach(Consumer<? super Point> action) {
-//        Iterable.super.forEach(action);
-//    }
-//
-//    @Override
-//    public Spliterator<Point> spliterator() {
-//        return Iterable.super.spliterator();
-//    }
 }

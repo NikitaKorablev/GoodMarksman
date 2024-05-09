@@ -1,15 +1,19 @@
-module com.example.goodmarksman {
+open module com.example.goodmarksman {
     requires javafx.controls;
     requires javafx.fxml;
 
     requires org.controlsfx.controls;
     requires com.dlsc.formsfx;
     requires com.google.gson;
+    requires java.sql;
+    requires org.xerial.sqlitejdbc;
+    requires java.persistence;
+    requires org.hibernate.orm.core;
+    requires java.desktop;
+    requires org.jboss.jandex;
 
-    opens com.example.goodmarksman to javafx.fxml, com.google.gson;
     exports com.example.goodmarksman;
     exports com.example.goodmarksman.objects;
     exports com.example.goodmarksman.models;
-    opens com.example.goodmarksman.objects to com.google.gson, javafx.fxml;
-    opens com.example.goodmarksman.models to com.google.gson, javafx.fxml;
+    exports com.example.goodmarksman.enams;
 }

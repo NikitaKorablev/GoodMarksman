@@ -40,9 +40,14 @@
                         <cursor>
                            <Cursor fx:constant="HAND" />
                         </cursor></Button>
+                     <Button mnemonicParsing="false" onAction="#onScoreBordButtonClick" text="Score Bord">
+                        <HBox.margin>
+                           <Insets left="65.0" />
+                        </HBox.margin>
+                     </Button>
                      <Button fx:id="stopButton" mnemonicParsing="false" onAction="#onStopButtonClick" text="Stop">
                         <HBox.margin>
-                           <Insets left="150.0" />
+                           <Insets />
                         </HBox.margin>
                         <cursor>
                            <Cursor fx:constant="HAND" />

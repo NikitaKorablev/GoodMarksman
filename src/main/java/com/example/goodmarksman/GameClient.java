@@ -5,7 +5,13 @@ import com.example.goodmarksman.models.GameModel;
 import com.example.goodmarksman.objects.*;
 import com.example.goodmarksman.enams.Action;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.stage.Stage;
+
+import java.util.ArrayList;
 
 public class GameClient implements IObserver {
     Action gameState = Action.GAME_STOPPED;
@@ -25,22 +31,35 @@ public class GameClient implements IObserver {
 //        new Thread(this::run).start();
     }
 
-    void messageListener() {
-//        boolean listening = true;
+    private void showScoreBoard(ArrayList<Score> scoreBoard) {
+        SB_Controller controller = new SB_Controller();
 
+        Platform.runLater(() -> {
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("score-bord.fxml"));
+                fxmlLoader.setController(controller);
+                Stage stage = new Stage();
+                stage.setTitle("Score Board");
+                stage.setScene(new Scene(fxmlLoader.load()));
+                stage.show();
+            } catch (Exception e) {
+                System.err.println(e.getMessage());
+            }
+        });
+
+        controller.setTable(scoreBoard);
+    }
+
+    void messageListener() {
         while (true) {
-//            System.out.println("Message received");
             try {
                 Msg msg = server.readMsg();
                 synchronized (Thread.currentThread()) {
                     switch (msg.getAction()) {
                         case CONNECTION_ERROR:
-                            System.err.println(msg.message);
                             server.getSocket().close();
-                            System.err.println("Socket was closed!");
                             break;
                         case UPDATE_GAME_STATE:
-                            System.out.println(msg.clientsData);
                             MainClient.m.getDao().setClientsData(msg.clientsData);
                             MainClient.m.updateState();
                             break;
@@ -55,21 +74,26 @@ public class GameClient implements IObserver {
                             });
                             break;
                         case CLIENT_STATE:
-                            System.out.println("Win event: " + msg);
+                            System.out.println("\nWin event: " + msg + "\n");
                             if (msg.clientState.equals(ClientState.WIN)) {
-                                Platform.runLater(() -> {
-                                    new Alert(Alert.AlertType.INFORMATION, msg.message).show();
-                                });
+                                showScoreBoard(msg.scoreBoard);
+                                Platform.runLater(() ->
+                                    new Alert(Alert.AlertType.INFORMATION, msg.message).show()
+                                );
                             }
+                            break;
+                        case GET_DB:
+                            showScoreBoard(msg.scoreBoard);
+                            break;
+                        default:
+                            break;
                     }
                 }
-//                System.out.println("Message Listener out: " + MainClient.model.getDao().clientsData.getArray());
             } catch (Exception e) {
                 System.err.println("Message Listener error: " + e.getMessage());
                 return;
             }
         }
-//        System.out.println("Server disconnected");
     }
 
     public int getServerPort() {

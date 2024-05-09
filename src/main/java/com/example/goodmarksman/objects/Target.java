@@ -148,8 +148,6 @@ public class Target {
                 ", X=" + X +
                 ", Y=" + Y +
                 ", upperThreshold=" + upperThreshold +
-//                ", min_x=" + min_x +
-//                ", max_x=" + max_x +
                 ", currentCoolDown=" + currentCoolDown +
                 '}';
     }

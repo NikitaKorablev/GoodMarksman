@@ -17,6 +17,10 @@ public class Msg {
     public int view_height;
     public int portOwner = -1;
 
+    public Msg(Action action) {
+        this.action = action;
+    }
+
     public Msg(String message, Action action) {
         this.action = action;
         this.message = message;
@@ -38,12 +42,10 @@ public class Msg {
         this.action = action;
     }
 
-//    public Msg(ArrayList<Arrow> arrows, ArrayList<Score> score, MsgAction action) {
-////        this.players = players;
-//        this.arrows = arrows;
-//        this.score = score;
-//        this.action = action;
-//    }
+    public Msg(ArrayList<Score> scoreBoard, Action action) {
+        this.action = action;
+        this.scoreBoard = scoreBoard;
+    }
 
     public Msg(ClientsDataArray dataArray, Action action) {
         this.clientsData = dataArray;
@@ -55,10 +57,11 @@ public class Msg {
         this.action = action;
     }
 
-    public Msg(String message, ClientState state, Action action) {
+    public Msg(String message, ArrayList<Score> scoreBoard, ClientState state, Action action) {
         this.message = message;
         this.clientState = state;
         this.action = action;
+        this.scoreBoard = scoreBoard;
     }
 
     public Msg(String message) {
