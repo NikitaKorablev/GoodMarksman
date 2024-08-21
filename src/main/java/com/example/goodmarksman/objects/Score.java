@@ -29,12 +29,6 @@ public class Score {
         this.shotCountValue = shotCountValue;
     }
 
-//    public Score(Text score, Text shot) {
-////        this.score = score;
-////        this.shotCount = shot;
-//        this.scoreValue = Integer.parseInt(score.getText());
-//        this.shotCountValue = Integer.parseInt(shot.getText());
-//    }
     public Score(int port) {
         this.portOwner = port;
     }
@@ -48,17 +42,13 @@ public class Score {
     public int getId() { return id; }
 
     public int getScoreValue() { return this.scoreValue; }
-    public void setScore(int i) {
-        this.scoreValue = i;
-//        Platform.runLater(() -> this.score.setText(Integer.toString(i)));
-    }
+    public void setScore(int i) { this.scoreValue = i; }
+
     public int scoreInc(int weight) {
         this.scoreValue += weight;
         return this.scoreValue;
-//        setScore(this.scoreValue);
     }
     public void setStartScore() {
-//        this.setScore(0);
         this.scoreValue = 0;
     }
 
@@ -71,14 +61,12 @@ public class Score {
     public int getShotCountValue() { return this.shotCountValue; }
     public void setShotCount(int i) {
         this.shotCountValue = i;
-//        Platform.runLater(() -> this.shotCount.setText(Integer.toString(i)));
     }
+
     public void shotCountInc() {
         this.shotCountValue++;
-//        setShotCount(this.shotCountValue);
     }
     public void setStartShotCount() {
-//        this.setShotCount(0);
         this.shotCountValue = 0;
     }
 

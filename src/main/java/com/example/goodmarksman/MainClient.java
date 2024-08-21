@@ -1,6 +1,7 @@
 package com.example.goodmarksman;
 
 import com.example.goodmarksman.models.GameModel;
+import com.example.goodmarksman.models.Models;
 import com.example.goodmarksman.objects.Client;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

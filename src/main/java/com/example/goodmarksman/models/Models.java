@@ -1,6 +1,4 @@
-package com.example.goodmarksman;
-
-import com.example.goodmarksman.models.GameModel;
+package com.example.goodmarksman.models;
 
 public class Models {
     static GameModel gm;
