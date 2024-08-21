@@ -16,4 +16,5 @@ open module com.example.goodmarksman {
     exports com.example.goodmarksman.objects;
     exports com.example.goodmarksman.models;
     exports com.example.goodmarksman.enams;
+    exports com.example.goodmarksman.data;
 }

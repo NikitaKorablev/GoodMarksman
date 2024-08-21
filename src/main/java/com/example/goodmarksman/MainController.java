@@ -1,6 +1,5 @@
 package com.example.goodmarksman;
 
-//import com.example.goodmarksman.models.Game;
 import com.example.goodmarksman.enams.ClientState;
 import com.example.goodmarksman.models.GameModel;
 import com.example.goodmarksman.objects.*;

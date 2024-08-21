@@ -1,6 +1,7 @@
-package com.example.goodmarksman;
+package com.example.goodmarksman.data;
 
 //import com.example.goodmarksman.models.Game;
+import com.example.goodmarksman.MainClient;
 import com.example.goodmarksman.enams.COLORS;
 import com.example.goodmarksman.objects.*;
 import javafx.application.Platform;
@@ -16,12 +17,7 @@ import javafx.scene.text.Text;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Spliterator;
-import java.util.function.Consumer;
 
-//TODO: Будет отвечать за ведение счета всех игроков
-// и хранение игровых объектов
 public class DAO {
     private Pane gameView;
     private Circle smallTarget = null;
@@ -42,10 +38,10 @@ public class DAO {
     protected ArrayList<Score> getScoreBord(ArrayList<String> playerNames) {
         return null;
     }
-    protected ArrayList<Score> getScoreBord(String name) {
+    public ArrayList<Score> getScoreBord(String name) {
         return null;
     }
-    protected void insertScore(Score score) throws Exception {}
+    public void insertScore(Score score) throws Exception {}
 
     public int playersSize() {
         return players.size();
