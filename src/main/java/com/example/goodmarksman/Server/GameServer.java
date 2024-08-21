@@ -1,5 +1,7 @@
-package com.example.goodmarksman;
+package com.example.goodmarksman.Server;
 
+import com.example.goodmarksman.Client.IObserver;
+import com.example.goodmarksman.MainServer;
 import com.example.goodmarksman.enams.ClientState;
 import com.example.goodmarksman.models.GameModel;
 import com.example.goodmarksman.objects.*;
@@ -20,7 +22,7 @@ public class GameServer implements IObserver {
     protected boolean doConnectPlayers = true;
     protected int countReadyPlayers = 0;
 
-    GameServer() {}
+    public GameServer() {}
 
     public void connectClients(ServerSocket serverSocket) {
         while (doConnectPlayers) {

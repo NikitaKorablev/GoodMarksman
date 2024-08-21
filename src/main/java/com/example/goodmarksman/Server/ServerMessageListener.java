@@ -1,5 +1,6 @@
-package com.example.goodmarksman;
+package com.example.goodmarksman.Server;
 
+import com.example.goodmarksman.MainServer;
 import com.example.goodmarksman.enams.Action;
 import com.example.goodmarksman.enams.ClientState;
 import com.example.goodmarksman.objects.Arrow;

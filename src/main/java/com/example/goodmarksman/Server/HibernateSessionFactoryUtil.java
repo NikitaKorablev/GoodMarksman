@@ -1,4 +1,4 @@
-package com.example.goodmarksman;
+package com.example.goodmarksman.Server;
 
 import com.example.goodmarksman.objects.Score;
 import org.hibernate.SessionFactory;
