@@ -34,7 +34,7 @@ public class GameClient implements IObserver {
 
         Platform.runLater(() -> {
             try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("score-bord.fxml"));
+                FXMLLoader fxmlLoader = MainClient.scoreBord_fxmlLoader;
                 fxmlLoader.setController(controller);
                 Stage stage = new Stage();
                 stage.setTitle("Score Board");

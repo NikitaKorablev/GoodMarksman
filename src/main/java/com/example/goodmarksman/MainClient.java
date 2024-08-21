@@ -19,6 +19,7 @@ public class MainClient extends Application {
     public static Stage primaryStage;
 
     public static FXMLLoader game_fxmlLoader = new FXMLLoader(MainClient.class.getResource("game-view.fxml"));
+    public static FXMLLoader scoreBord_fxmlLoader = new FXMLLoader(MainClient.class.getResource("score-bord.fxml"));
 
     @Override
     public void start(Stage stage) throws IOException {

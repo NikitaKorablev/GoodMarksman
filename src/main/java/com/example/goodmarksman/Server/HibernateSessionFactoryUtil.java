@@ -15,7 +15,6 @@ public class HibernateSessionFactoryUtil {
             try {
                 Configuration configuration = new Configuration().
                         configure("hibernate.cfg.xml");
-//                        configure();
                 configuration.addAnnotatedClass(Score.class);
 
                 StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().

@@ -1,7 +1,7 @@
 package com.example.goodmarksman.models;
 
 import com.example.goodmarksman.data.DAO;
-import com.example.goodmarksman.data.DAO_DB;
+import com.example.goodmarksman.data.DBManager;
 import com.example.goodmarksman.Client.IObserver;
 import com.example.goodmarksman.objects.Msg;
 import com.example.goodmarksman.objects.*;
@@ -16,7 +16,7 @@ public class GameModel {
     private static final ArrayList<IObserver> allO = new ArrayList<>();
 
     public GameModel(boolean isServer) {
-        if (isServer) dao = new DAO_DB();
+        if (isServer) dao = new DBManager();
         else dao = new DAO();
     }
 
