@@ -1,27 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<!-- com.example.goodmarksman.Client.MainController-->
-
-<VBox alignment="TOP_CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="283.0" prefWidth="520.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.goodmarksman.Client.MainController">
-   <Pane prefHeight="240.0" prefWidth="520.0">
+<VBox alignment="TOP_CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="40.0" prefWidth="345.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.goodmarksman.Client.MainController">
+   <Pane prefHeight="40.0" prefWidth="346.0">
       <children>
-         <TextField fx:id="inputNameField" layoutX="186.0" layoutY="107.0" />
-      </children></Pane>
-   <HBox alignment="CENTER_LEFT" nodeOrientation="LEFT_TO_RIGHT" prefHeight="44.0" prefWidth="390.0" spacing="10.0" style="-fx-background-color: #CDCDCD;">
-      <children>
-         <Button fx:id="connectButton" mnemonicParsing="false" onAction="#connect" text="Connect">
+         <TextField fx:id="inputNameField" layoutX="90.0" layoutY="8.0" prefHeight="25.0" prefWidth="161.0" />
+         <Button fx:id="connectButton" layoutX="272.0" layoutY="8.0" mnemonicParsing="false" onAction="#connect" text="Connect">
             <cursor>
                <Cursor fx:constant="HAND" />
             </cursor>
          </Button>
-      </children>
-      <padding>
-         <Insets left="10.0" />
-      </padding>
-   </HBox>
+         <Label layoutX="13.0" layoutY="12.0" prefHeight="17.0" prefWidth="76.0" text="Введите имя:" />
+      </children></Pane>
 </VBox>
