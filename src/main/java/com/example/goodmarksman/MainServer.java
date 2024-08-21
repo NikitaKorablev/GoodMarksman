@@ -1,5 +1,6 @@
-package com.example.goodmarksman.Server;
+package com.example.goodmarksman;
 
+import com.example.goodmarksman.Server.GameServer;
 import com.example.goodmarksman.models.GameModel;
 import com.example.goodmarksman.models.Models;
 
