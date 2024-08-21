@@ -1,6 +1,6 @@
 package com.example.goodmarksman.data;
 
-import com.example.goodmarksman.HibernateSessionFactoryUtil;
+import com.example.goodmarksman.Server.HibernateSessionFactoryUtil;
 import com.example.goodmarksman.objects.Score;
 import org.hibernate.Session;
 

@@ -2,7 +2,7 @@ package com.example.goodmarksman.models;
 
 import com.example.goodmarksman.data.DAO;
 import com.example.goodmarksman.data.DAO_DB;
-import com.example.goodmarksman.IObserver;
+import com.example.goodmarksman.Client.IObserver;
 import com.example.goodmarksman.objects.Msg;
 import com.example.goodmarksman.objects.*;
 

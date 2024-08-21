@@ -1,6 +1,6 @@
 package com.example.goodmarksman.objects;
 
-import com.example.goodmarksman.IObserver;
+import com.example.goodmarksman.Client.IObserver;
 import com.google.gson.Gson;
 
 import java.io.*;
