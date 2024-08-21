@@ -25,11 +25,12 @@ public class GameClient implements IObserver {
         this.server = server;
         System.out.println("Client connected to " + server.getSocket().getLocalPort());
 
-        messageListener = new Thread(this::messageListener);
+        ClientMessageListener cml = new ClientMessageListener(server);
+        messageListener = new Thread(cml::messageListener);
         messageListener.setDaemon(true);
     }
 
-    private void showScoreBoard(ArrayList<Score> scoreBoard) {
+    protected void showScoreBoard(ArrayList<Score> scoreBoard) {
         SB_Controller controller = new SB_Controller();
 
         Platform.runLater(() -> {
@@ -46,52 +47,6 @@ public class GameClient implements IObserver {
         });
 
         controller.setTable(scoreBoard);
-    }
-
-    void messageListener() {
-        while (true) {
-            try {
-                Msg msg = server.readMsg();
-                synchronized (Thread.currentThread()) {
-                    switch (msg.getAction()) {
-                        case CONNECTION_ERROR:
-                            server.getSocket().close();
-                            break;
-                        case UPDATE_GAME_STATE:
-                            MainClient.m.getDao().setClientsData(msg.clientsData);
-                            MainClient.m.updateState();
-                            break;
-                        case CLIENT_DISCONNECTED:
-                            Platform.runLater(() -> {
-                                try {
-                                    MainClient.m.getDao().deleteClient(msg.clientData);
-                                } catch (Exception e) {
-                                    System.err.println("Delete Client Error in GameClient: " + e.getMessage());
-                                    throw new RuntimeException(e);
-                                }
-                            });
-                            break;
-                        case CLIENT_STATE:
-                            System.out.println("\nWin event: " + msg + "\n");
-                            if (msg.clientState.equals(ClientState.WIN)) {
-                                showScoreBoard(msg.scoreBoard);
-                                Platform.runLater(() ->
-                                    new Alert(Alert.AlertType.INFORMATION, msg.message).show()
-                                );
-                            }
-                            break;
-                        case GET_DB:
-                            showScoreBoard(msg.scoreBoard);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            } catch (Exception e) {
-                System.err.println("Message Listener error: " + e.getMessage());
-                return;
-            }
-        }
     }
 
     public int getServerPort() {
