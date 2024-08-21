@@ -1,17 +1,13 @@
 package com.example.goodmarksman;
 
 import com.example.goodmarksman.models.GameModel;
+import com.example.goodmarksman.models.Models;
 import com.example.goodmarksman.objects.Client;
-import com.example.goodmarksman.objects.Score;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainServer {
     public static final GameModel model = Models.buildGM(true);
@@ -32,7 +28,6 @@ public class MainServer {
             System.out.append("Server start\n");
 
             while (true) {
-                // TODO: Логика подключения нескольких клиентов
                 cs = ss.accept();
                 System.out.println("Client connect (" + cs.getPort() + ")");
 
@@ -52,7 +47,7 @@ public class MainServer {
     }
 
     public static void main(String[] args) {
-        model.getDao().getScoreBord("Player1");
+//        model.getDao().getScoreBord("Player1");
 
         MainServer ms = new MainServer();
         ms.startServer();

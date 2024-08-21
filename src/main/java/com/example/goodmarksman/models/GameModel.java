@@ -1,13 +1,10 @@
 package com.example.goodmarksman.models;
 
-//import com.example.goodmarksman.models.Game;
-//import com.example.goodmarksman.models.SCGame;
-import com.example.goodmarksman.DAO;
-import com.example.goodmarksman.DAO_DB;
+import com.example.goodmarksman.data.DAO;
+import com.example.goodmarksman.data.DAO_DB;
 import com.example.goodmarksman.IObserver;
 import com.example.goodmarksman.objects.Msg;
 import com.example.goodmarksman.objects.*;
-import org.sqlite.core.DB;
 
 import java.io.IOException;
 import java.net.Socket;
@@ -29,13 +26,7 @@ public class GameModel {
 
     public DAO getDao() { return dao; }
 
-//    @Override
-//    public Iterator<Score> iterator() {
-//        return dao.iterator();
-//    }
-
     public void event() {
-//        System.out.println("Allo size: " + allO.size());
         for (IObserver o: allO) {
             o.event(this);
         }
@@ -65,10 +56,10 @@ public class GameModel {
     }
 
     public ClientData getClientData(Socket s) { return dao.getClientData(s.getPort()); }
+
     public void setClientsData(ClientsDataArray clientsData) {
         dao.setClientsData(clientsData);
     }
-
     public void setClientName(Socket s, String name) {
         dao.setClientName(s, name);
     }

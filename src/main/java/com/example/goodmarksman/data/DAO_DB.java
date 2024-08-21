@@ -1,8 +1,8 @@
-package com.example.goodmarksman;
+package com.example.goodmarksman.data;
 
+import com.example.goodmarksman.HibernateSessionFactoryUtil;
 import com.example.goodmarksman.objects.Score;
 import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 import java.sql.*;
 import java.util.ArrayList;
