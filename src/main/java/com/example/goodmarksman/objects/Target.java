@@ -5,7 +5,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 public class Target {
-//    private final Circle target;
     private COLORS curColor;
     private COLORS baseColor;
     private int moveSpeed;
@@ -19,23 +18,9 @@ public class Target {
     private int Y = 0;
 
     private int upperThreshold;
-//    private final int min_x = 38;
-//    private final int max_x = 380;
-
     public int currentCoolDown = 0;
 
-    public Target(COLORS color, int orientation, int weight, int speed) {
-//        this.target = circle;
-        this.curColor = color;
-        this.baseColor = color;
-        this.moveSpeed = speed;
-        this.startOrientation = orientation;
-        this.orientation = orientation;
-        this.weight = weight;
-    }
-
     public Target(COLORS color, int x, int y, int radius, int orientation, int weight, int speed) {
-//        this.target = new Circle(radius);
         this.radius = radius;
 
         this.X = x;
@@ -71,9 +56,6 @@ public class Target {
 
     public COLORS getCurrentColor() { return curColor; }
     public COLORS getBaseColor() { return baseColor; }
-
-    public void setCurrentColor(COLORS color) { this.curColor = color; }
-    public void setBaseColor(COLORS color) { this.baseColor = color; }
 
     public void setCoolDown() { this.currentCoolDown = this.colorCoolDown; }
     public boolean updateCoolDown() throws Exception {
@@ -117,14 +99,6 @@ public class Target {
 
     public void setY(int Y) { this.Y = Y; }
     public int getY() { return this.Y; }
-
-    public void setOrientation(int orientation) { this.orientation = orientation; }
-    public int getOrientation() { return orientation; }
-
-    public int getStartOrientation() { return startOrientation; }
-
-    public void setMoveSpeed(int speed) { this.moveSpeed = speed; }
-    public double getMoveSpeed() { return this.moveSpeed; }
 
     public int getWeight() { return weight; }
 

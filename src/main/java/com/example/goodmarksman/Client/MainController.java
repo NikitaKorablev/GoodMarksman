@@ -1,5 +1,6 @@
-package com.example.goodmarksman;
+package com.example.goodmarksman.Client;
 
+import com.example.goodmarksman.MainClient;
 import com.example.goodmarksman.enams.ClientState;
 import com.example.goodmarksman.models.GameModel;
 import com.example.goodmarksman.objects.*;
@@ -16,7 +17,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
-import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -27,8 +27,6 @@ public class MainController implements IObserver {
     private final int port = 3000;
     private InetAddress ip = null;
 
-    @FXML
-    private Button connectButton;
     @FXML
     private TextField inputNameField;
 
@@ -62,12 +60,6 @@ public class MainController implements IObserver {
     @FXML
     private HBox name_block_4;
 
-//    public void setPrimaryStage(Stage primaryStage) { this.primaryStage = primaryStage; }
-//    public void setGame(GameClient game) { this.game = game; }
-//    public void setInetAddress(InetAddress ip) { this.ip = ip; }
-//    public void setPlayerName(String playerName) { this.playerName = playerName; }
-//    public void setServer(Client server) { this.server = server; }
-
     @FXML
     public void initialize() {
         if (gameView != null && MainClient.game != null) {
@@ -100,8 +92,6 @@ public class MainController implements IObserver {
                 MainClient.m.getDao().setStatisticBoxes(statisticBoxes);
                 MainClient.m.getDao().setArrow(arrow);
             }
-
-
 
             MainClient.m.addObserver((model) -> {
 //                System.out.println("test");
@@ -161,7 +151,8 @@ public class MainController implements IObserver {
                 return;
             }
 
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("game-view.fxml"));
+//            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("../game-view.fxml"));
+            FXMLLoader fxmlLoader = MainClient.game_fxmlLoader;
 
             MainClient.primaryStage.setScene(new Scene(fxmlLoader.load()));
             MainClient.primaryStage.show();

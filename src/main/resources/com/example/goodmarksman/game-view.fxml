@@ -7,12 +7,12 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="TOP_CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="283.0" prefWidth="520.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.goodmarksman.MainController">
+<VBox alignment="TOP_CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="283.0" prefWidth="520.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.goodmarksman.Client.MainController">
    <FlowPane prefHeight="570.0" prefWidth="537.0">
       <children>
          <FlowPane prefHeight="0.0" prefWidth="390.0" style="-fx-border-color: black;">
             <children>
-               <Pane fx:id="gameView" onMouseClicked="#mouseOnClicked" prefHeight="240.0" prefWidth="390.0">
+               <Pane fx:id="gameView" onMouseClicked="#mouseOnClicked" prefHeight="240.0" prefWidth="390.0" style="-fx-background-color: gold;">
                   <children>
                      <Line endX="7.399993896484375" endY="121.00001525878906" layoutX="285.0" layoutY="119.0" startX="7.399993896484375" startY="-119.00000762939453" />
                      <Line endX="100.0" endY="109.0" layoutX="250.0" layoutY="130.0" startX="100.0" startY="-131.0" />
@@ -59,7 +59,7 @@
                </HBox>
             </children>
          </FlowPane>
-         <VBox fx:id="scoreBord" prefHeight="286.0" prefWidth="127.0" style="-fx-border-color: black;">
+         <VBox fx:id="scoreBord" prefHeight="286.0" prefWidth="127.0" style="-fx-border-color: black; -fx-background-color: gold;">
             <children>
                <VBox prefWidth="100.0">
                   <children>

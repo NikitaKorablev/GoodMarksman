@@ -1,13 +1,12 @@
 package com.example.goodmarksman;
 
+import com.example.goodmarksman.Server.GameServer;
 import com.example.goodmarksman.models.GameModel;
 import com.example.goodmarksman.models.Models;
-import com.example.goodmarksman.objects.Client;
 
 import java.io.*;
 import java.net.InetAddress;
 import java.net.ServerSocket;
-import java.net.Socket;
 
 public class MainServer {
     public static final GameModel model = Models.buildGM(true);
@@ -15,11 +14,13 @@ public class MainServer {
     int port = 3000;
     InetAddress ip = null;
 
-    private static GameServer game = null;
+    public static GameServer game = null;
 
     void startServer() {
+        if (game != null) return;
+
         ServerSocket ss;
-        Socket cs;
+//        Socket cs;
 
         try {
             ip = InetAddress.getLocalHost();
@@ -27,19 +28,8 @@ public class MainServer {
             ss = new ServerSocket(port, 0, ip);
             System.out.append("Server start\n");
 
-            while (true) {
-                cs = ss.accept();
-                System.out.println("Client connect (" + cs.getPort() + ")");
-
-                Client cl = new Client(cs);
-
-                synchronized (Thread.currentThread()) {
-                    if (game == null) { game = new GameServer(cl); }
-                    else {
-                        game.addListener(cl);
-                    }
-                }
-            }
+            game = new GameServer();
+            game.connectClients(ss);
 
         } catch (IOException ex) {
             System.out.println(ex.getMessage());

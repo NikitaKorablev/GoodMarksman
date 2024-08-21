@@ -1,4 +1,4 @@
-package com.example.goodmarksman;
+package com.example.goodmarksman.Server;
 
 import com.example.goodmarksman.objects.Score;
 import org.hibernate.SessionFactory;
@@ -15,7 +15,6 @@ public class HibernateSessionFactoryUtil {
             try {
                 Configuration configuration = new Configuration().
                         configure("hibernate.cfg.xml");
-//                        configure();
                 configuration.addAnnotatedClass(Score.class);
 
                 StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder().

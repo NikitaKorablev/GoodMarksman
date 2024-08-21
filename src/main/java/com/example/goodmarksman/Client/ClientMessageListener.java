@@ -1,56 +1,21 @@
-package com.example.goodmarksman;
+package com.example.goodmarksman.Client;
 
+import com.example.goodmarksman.MainClient;
 import com.example.goodmarksman.enams.ClientState;
-import com.example.goodmarksman.models.GameModel;
-import com.example.goodmarksman.objects.*;
-import com.example.goodmarksman.enams.Action;
+import com.example.goodmarksman.objects.Client;
+import com.example.goodmarksman.objects.Msg;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.stage.Stage;
 
-import java.util.ArrayList;
-
-public class GameClient implements IObserver {
-    Action gameState = Action.GAME_STOPPED;
-    ClientState clientState = ClientState.NOT_READY;
-    public Thread messageListener;
+public class ClientMessageListener {
 
     private final Client server;
 
-    // Подключение к серверу
-    public GameClient(Client server) throws Exception {
+    ClientMessageListener(Client server){
         this.server = server;
-        System.out.println("Client connected to " + server.getSocket().getLocalPort());
-
-        messageListener = new Thread(this::messageListener);
-        messageListener.setDaemon(true);
-//        messageListener.start();
-//        new Thread(this::run).start();
     }
 
-    private void showScoreBoard(ArrayList<Score> scoreBoard) {
-        SB_Controller controller = new SB_Controller();
-
-        Platform.runLater(() -> {
-            try {
-                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("score-bord.fxml"));
-                fxmlLoader.setController(controller);
-                Stage stage = new Stage();
-                stage.setTitle("Score Board");
-                stage.setScene(new Scene(fxmlLoader.load()));
-                stage.show();
-            } catch (Exception e) {
-                System.err.println(e.getMessage());
-            }
-        });
-
-        controller.setTable(scoreBoard);
-    }
-
-    void messageListener() {
+    public void messageListener() {
         while (true) {
             try {
                 Msg msg = server.readMsg();
@@ -76,14 +41,14 @@ public class GameClient implements IObserver {
                         case CLIENT_STATE:
                             System.out.println("\nWin event: " + msg + "\n");
                             if (msg.clientState.equals(ClientState.WIN)) {
-                                showScoreBoard(msg.scoreBoard);
+                                MainClient.game.showScoreBoard(msg.scoreBoard);
                                 Platform.runLater(() ->
-                                    new Alert(Alert.AlertType.INFORMATION, msg.message).show()
+                                        new Alert(Alert.AlertType.INFORMATION, msg.message).show()
                                 );
                             }
                             break;
                         case GET_DB:
-                            showScoreBoard(msg.scoreBoard);
+                            MainClient.game.showScoreBoard(msg.scoreBoard);
                             break;
                         default:
                             break;
@@ -96,10 +61,4 @@ public class GameClient implements IObserver {
         }
     }
 
-    public int getServerPort() {
-        return server.getSocket().getLocalPort();
-    }
-
-    @Override
-    public void event(GameModel m) {}
 }

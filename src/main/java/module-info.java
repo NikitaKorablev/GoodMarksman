@@ -12,9 +12,11 @@ open module com.example.goodmarksman {
     requires java.desktop;
     requires org.jboss.jandex;
 
-    exports com.example.goodmarksman;
     exports com.example.goodmarksman.objects;
     exports com.example.goodmarksman.models;
     exports com.example.goodmarksman.enams;
     exports com.example.goodmarksman.data;
+    exports com.example.goodmarksman.Server;
+    exports com.example.goodmarksman.Client;
+    exports com.example.goodmarksman;
 }

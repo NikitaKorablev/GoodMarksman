@@ -1,6 +1,5 @@
 package com.example.goodmarksman.data;
 
-//import com.example.goodmarksman.models.Game;
 import com.example.goodmarksman.MainClient;
 import com.example.goodmarksman.enams.COLORS;
 import com.example.goodmarksman.objects.*;
@@ -59,20 +58,10 @@ public class DAO {
 
     public ArrayList<Client> getPlayers() { return players; }
 
-//    public ClientsDataArray getArray() { return this.clientsData; }
-
     public void sendMsg(Msg msg) throws IOException {
         if (msg.portOwner == -1) throw new IOException("Port owner not set.");
         Client client = players.get(playerIndex(msg.portOwner));
         client.sendMsg(msg);
-    }
-
-    public Client getClient(int port) {
-        for (Client cl : players) {
-            if (cl.getSocket().getPort() == port) return cl;
-        }
-
-        return null;
     }
 
     public void setClientName(Socket s, String name) {
@@ -102,12 +91,6 @@ public class DAO {
 
     public Pane getGameView() { return gameView; }
     public void setGameView(Pane gameView) { this.gameView = gameView; }
-
-    public Circle getSmallTarget() { return smallTarget; }
-    public void setSmallTarget(Circle smallTarget) { this.smallTarget = smallTarget; }
-
-    public Circle getBigTarget() { return bigTarget; }
-    public void setBigTarget(Circle bigTarget) { this.bigTarget = bigTarget; }
 
     public Polygon getArrow() { return arrow; }
     public void setArrow(Polygon arrow) { this.arrow = arrow; }
@@ -142,12 +125,6 @@ public class DAO {
 
         return null;
     }
-
-//    public void moveArrow(Arrow arrow) {
-//        double newX = arrow.getX() + arrow.getSpeed();
-//        arrow.setX(newX);
-//
-//    }
 
     public void updateTargets() {
         ArrayList<Target> targets = clientsData.getTargets();

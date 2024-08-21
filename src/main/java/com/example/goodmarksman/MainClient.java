@@ -1,5 +1,6 @@
 package com.example.goodmarksman;
 
+import com.example.goodmarksman.Client.GameClient;
 import com.example.goodmarksman.models.GameModel;
 import com.example.goodmarksman.models.Models;
 import com.example.goodmarksman.objects.Client;
@@ -16,6 +17,9 @@ public class MainClient extends Application {
     public static Client server = null;
     public static String playerName = "";
     public static Stage primaryStage;
+
+    public static FXMLLoader game_fxmlLoader = new FXMLLoader(MainClient.class.getResource("game-view.fxml"));
+    public static FXMLLoader scoreBord_fxmlLoader = new FXMLLoader(MainClient.class.getResource("score-bord.fxml"));
 
     @Override
     public void start(Stage stage) throws IOException {
