@@ -42,7 +42,7 @@ public class DAO_DB extends DAO {
             if (!scores.isEmpty() && scores.get(0).getShotCountValue() > score.getShotCountValue()) {
                 score.setId(scores.get(0).getId());
                 session.update(score);
-            } else session.persist(score);
+            } else if (scores.isEmpty()) session.persist(score);
 
             session.getTransaction().commit();
             session.close();
