@@ -1,4 +1,4 @@
-package com.example.goodmarksman;
+package com.example.goodmarksman.Client;
 
 import com.example.goodmarksman.objects.Score;
 import javafx.application.Platform;
@@ -9,7 +9,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import java.beans.IntrospectionException;
 import java.util.ArrayList;
 
 public class SB_Controller {

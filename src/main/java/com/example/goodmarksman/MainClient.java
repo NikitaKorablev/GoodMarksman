@@ -1,4 +1,4 @@
-package com.example.goodmarksman;
+package com.example.goodmarksman.Client;
 
 import com.example.goodmarksman.models.GameModel;
 import com.example.goodmarksman.models.Models;

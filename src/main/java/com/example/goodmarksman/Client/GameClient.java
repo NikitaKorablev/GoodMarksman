@@ -1,11 +1,11 @@
-package com.example.goodmarksman;
+package com.example.goodmarksman.Client;
 
+import com.example.goodmarksman.MainClient;
 import com.example.goodmarksman.enams.ClientState;
 import com.example.goodmarksman.models.GameModel;
 import com.example.goodmarksman.objects.*;
 import com.example.goodmarksman.enams.Action;
 import javafx.application.Platform;
-import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
@@ -27,8 +27,6 @@ public class GameClient implements IObserver {
 
         messageListener = new Thread(this::messageListener);
         messageListener.setDaemon(true);
-//        messageListener.start();
-//        new Thread(this::run).start();
     }
 
     private void showScoreBoard(ArrayList<Score> scoreBoard) {
