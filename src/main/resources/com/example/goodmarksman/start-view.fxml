@@ -5,9 +5,9 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<!-- com.example.goodmarksman.MainController-->
+<!-- com.example.goodmarksman.Client.MainController-->
 
-<VBox alignment="TOP_CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="283.0" prefWidth="520.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.goodmarksman.MainController">
+<VBox alignment="TOP_CENTER" nodeOrientation="LEFT_TO_RIGHT" prefHeight="283.0" prefWidth="520.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.goodmarksman.Client.MainController">
    <Pane prefHeight="240.0" prefWidth="520.0">
       <children>
          <TextField fx:id="inputNameField" layoutX="186.0" layoutY="107.0" />
