@@ -20,7 +20,6 @@ public class MainServer {
         if (game != null) return;
 
         ServerSocket ss;
-//        Socket cs;
 
         try {
             ip = InetAddress.getLocalHost();
@@ -37,8 +36,6 @@ public class MainServer {
     }
 
     public static void main(String[] args) {
-//        model.getDao().getScoreBord("Player1");
-
         MainServer ms = new MainServer();
         ms.startServer();
     }
