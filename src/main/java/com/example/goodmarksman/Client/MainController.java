@@ -29,7 +29,6 @@ public class MainController implements IObserver {
 
     @FXML
     private TextField inputNameField;
-
     @FXML
     private Pane gameView;
     @FXML
@@ -50,7 +49,6 @@ public class MainController implements IObserver {
     private Text score_4;
     @FXML
     private Text shots_4;
-
     @FXML
     private HBox name_block_1;
     @FXML
@@ -59,7 +57,6 @@ public class MainController implements IObserver {
     private HBox name_block_3;
     @FXML
     private HBox name_block_4;
-
     @FXML
     public void initialize() {
         if (gameView != null && MainClient.game != null) {
@@ -94,9 +91,7 @@ public class MainController implements IObserver {
             }
 
             MainClient.m.addObserver((model) -> {
-//                System.out.println("test");
                 System.out.println("Event out: " + MainClient.m.getDao().getClientsData().getArray());
-//                ClientsDataArray dataObj = MainClient.m.getDao().getClientsData();
 
                 synchronized (Thread.currentThread()) {
                     MainClient.m.getDao().updateTargets();

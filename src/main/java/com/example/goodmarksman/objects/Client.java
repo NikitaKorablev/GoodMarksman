@@ -17,9 +17,6 @@ public class Client {
 
     IObserver observer = null;
 
-//    Arrow arrow = null;
-//    Score score = null;
-
     public Client(Socket cs) {
         this.cs = cs;
 
@@ -33,9 +30,6 @@ public class Client {
             System.err.println(e.getMessage());
             throw new RuntimeException(e);
         }
-
-//        this.arrow = arrow == null ? new Arrow() : arrow;
-//        this.score = score == null ? new Score() : score;
     }
 
     public void setName(String name) {
@@ -45,29 +39,8 @@ public class Client {
 
     public Socket getSocket() { return cs; }
 
-    public InputStream getIs() { return is; }
-    public void setIs(InputStream is) { this.is = is; }
-
-    public OutputStream getOs() { return os; }
-    public void setOs(OutputStream os) { this.os = os; }
-
-    public DataInputStream getDis() { return dis; }
-    public void setDis(DataInputStream dis) { this.dis = dis; }
-
-    public DataOutputStream getDos() { return dos; }
-    public void setDos(DataOutputStream dos) { this.dos = dos; }
-
     public void setIObserver(IObserver observer) { this.observer = observer; }
     public IObserver getIObserver() { return observer; }
-
-//    public boolean isConnected() { return isConnected; }
-//    public void setConnected(boolean connected) { isConnected = connected; }
-
-//    public Arrow getArrow() { return arrow; }
-//    public void setArrow(Arrow arrow) { this.arrow = arrow; }
-//
-//    public Score getScore() { return score; }
-//    public void setScore(Score score) { this.score = score; }
 
     public Msg readMsg() throws IOException {
         Msg msg;
@@ -93,18 +66,6 @@ public class Client {
             throw e;
         }
     }
-
-//    public void sendState(ClientsDataArray data) {
-//        try {
-////            System.out.println(cl.getSocket().getPort());
-//
-//            Msg message = new Msg(data, Action.UPDATE_GAME_STATE);
-//            sendMsg(message);
-//        } catch (IOException e) {
-//            System.err.println("Error of send data: " + e.getMessage());
-//            throw new RuntimeException(e);
-//        }
-//    }
 
     @Override
     public String toString() {
